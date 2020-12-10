@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
     <img src='/public/icons/android-chrome-192x192.png' />
 </p>
@@ -199,3 +200,34 @@ npm run serve
 [GPL-3.0 license](https://github.com/pipipi-pikachu/PPTist/blob/master/LICENSE) © [pipipi-pikachu](https://github.com/pipipi-pikachu)
 
 闭源商用请先邮件联系作者
+=======
+# ppt_online_editor
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your unit tests
+```
+npm run test:unit
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
+>>>>>>> a291994 (init)

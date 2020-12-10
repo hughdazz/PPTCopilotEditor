@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useMainStore } from './main'
 import { useSlidesStore } from './slides'
 import { useSnapshotStore } from './snapshot'
@@ -11,3 +12,17 @@ export {
   useKeyboardStore,
   useScreenStore,
 }
+=======
+import { createStore } from 'vuex'
+
+export default createStore({
+  state: {
+  },
+  mutations: {
+  },
+  actions: {
+  },
+  modules: {
+  }
+})
+>>>>>>> a291994 (init)

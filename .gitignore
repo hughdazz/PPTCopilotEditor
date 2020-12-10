@@ -2,6 +2,10 @@
 node_modules
 /dist
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a291994 (init)
 # local env files
 .env.local
 .env.*.local

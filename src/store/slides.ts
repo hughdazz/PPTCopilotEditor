@@ -1,11 +1,16 @@
 import { defineStore } from 'pinia'
 import tinycolor from 'tinycolor2'
-import { omit } from 'lodash'
+import { Dictionary, omit } from 'lodash'
 import { Slide, SlideTheme, PPTElement, PPTAnimation } from '@/types/slides'
 import { slides } from '@/mocks/slides'
 import { theme } from '@/mocks/theme'
 import { layouts } from '@/mocks/layout'
 import {parseString, Builder} from 'xml2js'
+import { array, func } from 'vue-types'
+
+const bulider = new Builder({
+  headless: true
+})
 
 interface RemoveElementPropData {
   id: string
@@ -188,47 +193,51 @@ export const useSlidesStore = defineStore('slides', {
       this.slides[slideIndex].elements = (elements as PPTElement[])
     },
 
-    convert_slide_to_xml(slide : Slide) {
-      const bulider = new Builder()
+    convert_elements_to_xml(PPTElements: PPTElement[]): Dictionary<string> {
+      // 输入一张幻灯片的PPTElement数组，提取有效信息为xml形式的串
+      // 现只支持对text的提取
+      const obj_xml = {} // id -> xml_content
+      PPTElements.forEach((element, index) => {
+        if (element.type === 'text') {
+          parseString(element.content, (err, result) => {
+            if (err === null) {
+              const label = Object.keys(result)[0] // fg . p h1 h2 
+              
+              result[label]['$'] = {// 在顶层标签引入这些属性
+                'id': element.id,
+                'left': element.left,
+                'top': element.top,
+                'width': element.width,
+                'height': element.height,
+                'rotate': element.rotate,
+              }
 
-      const xml_obj = []
+              const res = bulider.buildObject(result)
 
-      // slide.elements.forEach((element, index) => {
-      //   element.type
-      //   const str = JSON.stringify(element, null, 2)
-      //   xml_obj.push({
-
-      //   })
-      // })
-
-      const obj = {
-        'foo:Foo': {
-          $: {
-            'xmlns:foo': 'http://foo.com'
-          },
-          'bar:Bar': {
-            $: {
-              'xmlns:bar': 'http://bar.com'
+              console.log(res)
+              obj_xml[element.id] = res
             }
-          }
+            else {
+              console.error(err)
+            }
+          })
         }
-      }
-      const res = bulider.buildObject(obj)
-      /*
-      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-      <foo:Foo xmlns:foo="http://foo.com">
-        <bar:Bar xmlns:bar="http://bar.com"/>
-      </foo:Foo>
-      */
-      console.log(res)
+      })
+      console.log(JSON.stringify(obj_xml, null, 2))
+      return obj_xml
     },
+
+    convert_slide_to_xml(slide: Slide): Dictionary<string> {
+      // 将输入的单张幻灯片转换为xml格式的字符串
+      // 借助xmljs库，便于后续属性的调整
+      console.log(JSON.stringify(slide, null, 2))
+
+      return this.convert_elements_to_xml(slide.elements)
+    },  
 
     convert_current_slide_to_xml() {
       const current_slide = this.slides[this.slideIndex]
       this.convert_slide_to_xml(current_slide)
-
-      // const str = JSON.stringify(current_slide, null, 2)
-      // console.log(str)
     }
   },
 })

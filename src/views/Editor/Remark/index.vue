@@ -47,7 +47,7 @@ const remark = computed(() => currentSlide.value?.remark || '')
 //   </xml>`
 //   return xml
 // }
-
+slidesStore.convert_current_slide_to_xml()
 const commitInput = () => {
   // 提交输入的命令
   // 输入不为空才提交，提交后清空输入框

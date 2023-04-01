@@ -6,7 +6,7 @@
     ></div>
     <textarea
       :value="remark"
-      placeholder="点击输入演讲者备注"
+      placeholder="点击输入GPT命令"
       @input="$event => handleInput($event)"
     ></textarea>
   </div>

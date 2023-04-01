@@ -2,7 +2,7 @@
   <div class="remark">
     <div class="resize-handler" @mousedown="($event) => resize($event)"></div>
 
-    <div>
+    <div class="remark_content">
       <ul>
         <li class="my_li_tittle" v-if="history_ls.length > 0">历史记录</li>
         <li class="my_li" v-for="history in history_ls" :key="history">
@@ -10,7 +10,7 @@
         </li>
       </ul>
       <textarea :value="remark" placeholder="点击输入GPT命令" @input="($event) => handleInput($event)">
-            </textarea>
+                  </textarea>
       <button @click="commitInput">提交</button>
     </div>
   </div>
@@ -39,12 +39,22 @@ const { currentSlide } = storeToRefs(slidesStore)
 
 const remark = computed(() => currentSlide.value?.remark || '')
 
+// const convert_slide_to_xml = (slide: Slide) => {
+//   const { remark } = slide
+//   const xml = `<?xml version="1.0" encoding="UTF-8"?>
+//   <xml>
+//     <remark>${remark}</remark>
+//   </xml>`
+//   return xml
+// }
+
 const commitInput = () => {
   // 提交输入的命令
   // 输入不为空才提交，提交后清空输入框
   if (remark.value === '') return
   history_ls.value.push(remark.value)
   slidesStore.updateSlide({ remark: '' })
+  slidesStore.convert_slide_to_xml()
 }
 
 const handleInput = (e: Event) => {
@@ -85,7 +95,11 @@ const resize = (e: MouseEvent) => {
   border-top: 1px solid $borderColor;
   background-color: $lightGray;
   line-height: 1.5;
-  overflow-y: auto;
+
+  .remark_content {
+    overflow-y: auto;
+    height: 100%;
+  }
 
   .my_li {
     list-style: none;
@@ -99,14 +113,15 @@ const resize = (e: MouseEvent) => {
   }
 
   textarea {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    // height: 100%;
     resize: none;
     border: 0;
     outline: 0;
     padding: 8px;
     font-size: 12px;
     background-color: transparent;
+    overflow-y: none;
     // @include absolute-0();
   }
 }

@@ -186,5 +186,13 @@ export const useSlidesStore = defineStore('slides', {
       })
       this.slides[slideIndex].elements = (elements as PPTElement[])
     },
+
+    convert_slide_to_xml() {
+
+      const current_slide = this.slides[this.slideIndex]
+      const str = JSON.stringify(current_slide, null, 2)
+      console.log(str)
+     
+    }
   },
 })

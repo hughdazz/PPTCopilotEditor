@@ -22,6 +22,7 @@
 ```
 
 #### 画布的基本原理
+
 我们把关注点放在相对复杂的【画布】部分。画布中的每一个元素都由一组数据来描述，例如：
 ```typescript
 interface PPTBaseElement {
@@ -38,6 +39,7 @@ interface PPTBaseElement {
 同理【缩略图】 和 【放映页面】 其实上就是一个实际大小更小或更大的可视区域。
 
 #### 画布内的元素
+
 除了上述中的位置和尺寸信息，还可以携带更多的数据，以一个文本元素为例：
 ```typescript
 interface PPTTextElement {

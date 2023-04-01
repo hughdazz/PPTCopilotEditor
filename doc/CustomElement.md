@@ -4,6 +4,7 @@
 > 完整代码在 https://github.com/pipipi-pikachu/PPTist/tree/document-demo
 
 ### 编写新元素的结构与配置
+
 首先需要定义这个元素的结构，并添加该元素类型
 ```typescript 
 // types/slides.ts
@@ -65,6 +66,7 @@ export const MIN_SIZE = {
 ```
 
 ### 编写新元素组件
+
 然后开始编写该元素的组件：
 ```html
 <!-- views/components/element/FrameElement/index.vue -->

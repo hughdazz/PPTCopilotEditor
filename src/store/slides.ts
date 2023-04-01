@@ -5,6 +5,7 @@ import { Slide, SlideTheme, PPTElement, PPTAnimation } from '@/types/slides'
 import { slides } from '@/mocks/slides'
 import { theme } from '@/mocks/theme'
 import { layouts } from '@/mocks/layout'
+import {parseString, Builder} from 'xml2js'
 
 interface RemoveElementPropData {
   id: string
@@ -187,12 +188,47 @@ export const useSlidesStore = defineStore('slides', {
       this.slides[slideIndex].elements = (elements as PPTElement[])
     },
 
-    convert_slide_to_xml() {
+    convert_slide_to_xml(slide : Slide) {
+      const bulider = new Builder()
 
+      const xml_obj = []
+
+      // slide.elements.forEach((element, index) => {
+      //   element.type
+      //   const str = JSON.stringify(element, null, 2)
+      //   xml_obj.push({
+
+      //   })
+      // })
+
+      const obj = {
+        'foo:Foo': {
+          $: {
+            'xmlns:foo': 'http://foo.com'
+          },
+          'bar:Bar': {
+            $: {
+              'xmlns:bar': 'http://bar.com'
+            }
+          }
+        }
+      }
+      const res = bulider.buildObject(obj)
+      /*
+      <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+      <foo:Foo xmlns:foo="http://foo.com">
+        <bar:Bar xmlns:bar="http://bar.com"/>
+      </foo:Foo>
+      */
+      console.log(res)
+    },
+
+    convert_current_slide_to_xml() {
       const current_slide = this.slides[this.slideIndex]
-      const str = JSON.stringify(current_slide, null, 2)
-      console.log(str)
-     
+      this.convert_slide_to_xml(current_slide)
+
+      // const str = JSON.stringify(current_slide, null, 2)
+      // console.log(str)
     }
   },
 })

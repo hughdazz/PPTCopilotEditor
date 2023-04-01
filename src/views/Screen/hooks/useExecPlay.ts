@@ -145,7 +145,7 @@ export default () => {
   const autoPlay = () => {
     closeAutoPlay()
     message.success('开始自动放映')
-    autoPlayTimer.value = setInterval(execNext, 2500)
+    autoPlayTimer.value = window.setInterval(execNext, 2500)
   }
 
   // 鼠标滚动翻页

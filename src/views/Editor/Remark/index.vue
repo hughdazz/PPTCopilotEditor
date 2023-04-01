@@ -54,7 +54,7 @@ const commitInput = () => {
   if (remark.value === '') return
   history_ls.value.push(remark.value)
   slidesStore.updateSlide({ remark: '' })
-  slidesStore.convert_slide_to_xml()
+  slidesStore.convert_current_slide_to_xml()
 }
 
 const handleInput = (e: Event) => {

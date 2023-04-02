@@ -6,7 +6,7 @@ import { slides } from '@/mocks/slides'
 import { theme } from '@/mocks/theme'
 import { layouts } from '@/mocks/layout'
 import {parseString, Builder} from 'xml2js'
-import { array, func } from 'vue-types'
+import { get_catalog, catalog_ReqForm, catalog_ResData } from '@/api/ppt_Request_gpt'
 
 const bulider = new Builder({
   headless: true
@@ -223,21 +223,41 @@ export const useSlidesStore = defineStore('slides', {
           })
         }
       })
-      console.log(JSON.stringify(obj_xml, null, 2))
+      // console.log(JSON.stringify(obj_xml, null, 2))
       return obj_xml
     },
 
     convert_slide_to_xml(slide: Slide): Dictionary<string> {
       // 将输入的单张幻灯片转换为xml格式的字符串
       // 借助xmljs库，便于后续属性的调整
-      console.log(JSON.stringify(slide, null, 2))
+      // console.log(JSON.stringify(slide, null, 2))
 
       return this.convert_elements_to_xml(slide.elements)
     },  
 
     convert_current_slide_to_xml() {
       const current_slide = this.slides[this.slideIndex]
-      this.convert_slide_to_xml(current_slide)
-    }
+      const x = this.convert_slide_to_xml(current_slide)
+      const root = {
+        'section': {
+          ...x
+        }
+      }
+    },
+
+    request_get_catalog(prompt: string): void {
+      const form: catalog_ReqForm = {
+        prompt: prompt,
+        user_name: 'ljf',
+      }
+      const a = get_catalog(form)
+      console.log(a)
+      console.log(JSON.stringify(a, null, 2))
+    },
+
+    // request_get_detail():void {
+      
+    // },
+
   },
 })

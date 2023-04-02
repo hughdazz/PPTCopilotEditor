@@ -47,14 +47,14 @@ const remark = computed(() => currentSlide.value?.remark || '')
 //   </xml>`
 //   return xml
 // }
-slidesStore.convert_current_slide_to_xml()
+slidesStore.request_get_catalog('论语')
 const commitInput = () => {
   // 提交输入的命令
   // 输入不为空才提交，提交后清空输入框
   if (remark.value === '') return
   history_ls.value.push(remark.value)
+  slidesStore.request_get_catalog(remark.value)
   slidesStore.updateSlide({ remark: '' })
-  slidesStore.convert_current_slide_to_xml()
 }
 
 const handleInput = (e: Event) => {

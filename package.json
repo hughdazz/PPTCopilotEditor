@@ -44,6 +44,7 @@
     "prosemirror-schema-list": "^1.2.1",
     "prosemirror-state": "^1.4.1",
     "prosemirror-view": "^1.27.2",
+    "qs": "^6.11.1",
     "register-service-worker": "^1.7.2",
     "sortablejs": "^1.15.0",
     "stream": "^0.0.2",

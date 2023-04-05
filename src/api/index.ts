@@ -1,5 +1,6 @@
 import axios, {AxiosInstance, AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios'
 import { ElMessage } from 'element-plus'
+import qs from 'qs'
 
 // 数据返回的接口
 // 定义请求响应参数，不含data
@@ -13,9 +14,9 @@ interface ResultData<T> extends Result {
   data?: T;
 }
 
-const URL = 'http://127.0.0.1:5000/'
+const URL = 'http://127.0.0.1:5000'
 enum RequestEnums {
-  TIMEOUT = 20000,
+  TIMEOUT = 100000,
   OVERDUE = 600, // 登录失效
   FAIL = 999, // 请求失败
   SUCCESS = 200, // 请求成功
@@ -49,13 +50,13 @@ class RequestHttp {
         console.log( {
           ...config,
           headers: {
-            'x-access-token': token, // 请求头中携带token信息
+            // 'x-access-token': token, // 请求头中携带token信息
           }
         })
         return {
           ...config,
           headers: {
-            'x-access-token': token, // 请求头中携带token信息
+            // 'x-access-token': token, // 请求头中携带token信息
           }
         }
       },
@@ -118,8 +119,6 @@ class RequestHttp {
     return this.service.get(url, {params})
   }
   post<T>(url: string, params?: object): Promise<ResultData<T>> {
-    console.log(params)
-    console.log(url)
     return this.service.post(url, params)
   }
   put<T>(url: string, params?: object): Promise<ResultData<T>> {

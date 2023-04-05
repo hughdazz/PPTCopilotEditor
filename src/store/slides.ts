@@ -251,7 +251,7 @@ export const useSlidesStore = defineStore('slides', {
         user_name: 'ljf',
       }
       const a = get_catalog(form)
-      console.log(a)
+      console.log('res:', a)
       console.log(JSON.stringify(a, null, 2))
     },
 

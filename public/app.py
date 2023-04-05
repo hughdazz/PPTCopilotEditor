@@ -5,13 +5,10 @@ import json
 from flask_cors import CORS
 
 app = Flask(__name__)
+# app.debug = True
 CORS(app, supports_credentials=True)
 
-
-# 将此处替换为您的API密钥
-# my key: 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
-api_key = "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"
-
+api_key = "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"
 
 class ChatContextPool:
     def __init__(self):
@@ -110,22 +107,24 @@ def get_catalog():
 <!--更多的幻灯片・・・-->
 </slides>
     """
-    print(request)
-    print("here")
+    receive_data:dict = json.loads(request.data.decode('utf-8'))
+    print('receive:',receive_data,type(receive_data))
     # 从 JSON 数据中获取 'prompt' 参数
-    core_prompt = request.form.get('prompt')
-    user_name = request.form.get('user_name')
-    print("here")
-    print(core_prompt,type(core_prompt))
-    print(user_name,type(user_name))
+    core_prompt = receive_data.get('prompt')
+    user_name = receive_data.get('user_name')
+ 
     prompt = prompt.replace("{{topic}}", core_prompt)
     prompt = prompt.replace("{{user_name}}", user_name)
 
     # 使用 prompt 处理和生成您的 PPT 大纲
     generated_text = chat_pool.request_chat_gpt(user_name, prompt, api_key)
+    
+    
 
     chat_pool.add_message(user_name, "assistant", generated_text)
 
+    print('generated_text',generated_text)
+    
     return {
       'data' : generated_text
     }

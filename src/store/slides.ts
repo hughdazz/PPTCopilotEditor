@@ -250,9 +250,13 @@ export const useSlidesStore = defineStore('slides', {
         prompt: prompt,
         user_name: 'ljf',
       }
-      const a = get_catalog(form)
-      console.log('res:', a)
-      console.log(JSON.stringify(a, null, 2))
+      get_catalog(form).then((response) => {
+        const a = response.data
+        console.log('res:', a)
+        console.log('res_json:', JSON.stringify(a, null, 2))
+      }).catch(error => {
+        console.error('An error occurred:', error)
+      })
     },
 
     // request_get_detail():void {

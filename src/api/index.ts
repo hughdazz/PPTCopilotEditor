@@ -16,7 +16,7 @@ interface ResultData<T> extends Result {
 
 const URL = 'http://127.0.0.1:5000'
 enum RequestEnums {
-  TIMEOUT = 100000,
+  TIMEOUT = 100000, // 超时时间，要设置的很大！！
   OVERDUE = 600, // 登录失效
   FAIL = 999, // 请求失败
   SUCCESS = 200, // 请求成功
@@ -47,12 +47,12 @@ class RequestHttp {
     this.service.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         const token = localStorage.getItem('token') || ''
-        console.log( {
-          ...config,
-          headers: {
-            // 'x-access-token': token, // 请求头中携带token信息
-          }
-        })
+        // console.log( {
+        //   ...config,
+        //   headers: {
+        //     // 'x-access-token': token, // 请求头中携带token信息
+        //   }
+        // })
         return {
           ...config,
           headers: {
@@ -73,19 +73,20 @@ class RequestHttp {
     this.service.interceptors.response.use(
       (response: AxiosResponse) => {
         const { data, config } = response // 解构
-        if (data.code === RequestEnums.OVERDUE) {
-          // 登录信息失效，应跳转到登录页面，并清空本地的token
-          localStorage.setItem('token', '')
-          // router.replace({
-          // path: '/login'
-          // })
-          return Promise.reject(data)
-        }
-        // 全局错误信息拦截（防止下载文件得时候返回数据流，没有code，直接报错）
-        if (data.code && data.code !== RequestEnums.SUCCESS) {
-          ElMessage.error(data) // 此处也可以使用组件提示报错信息
-          return Promise.reject(data)
-        }
+        // TODO 返回信息暂时不设置code
+        // if (data.code === RequestEnums.OVERDUE) {
+        //   // 登录信息失效，应跳转到登录页面，并清空本地的token
+        //   localStorage.setItem('token', '')
+        //   // router.replace({
+        //   // path: '/login'
+        //   // })
+        //   return Promise.reject(data)
+        // }
+        // // 全局错误信息拦截（防止下载文件得时候返回数据流，没有code，直接报错）
+        // if (data.code && data.code !== RequestEnums.SUCCESS) {
+        //   ElMessage.error(data) // 此处也可以使用组件提示报错信息
+        //   return Promise.reject(data)
+        // }
         return data
       },
       (error: AxiosError) => {
@@ -100,6 +101,7 @@ class RequestHttp {
           // path: '/404'
           // });
         }
+        // return Promise.reject(error)
       }
     )
   }

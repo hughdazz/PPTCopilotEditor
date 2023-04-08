@@ -3,6 +3,8 @@ name: deploy
 on:
   push:
     branches: [master]
+  pull_request:
+    branches: [master]
 
 jobs:
   deploy:
@@ -19,10 +21,3 @@ jobs:
         run: |
           npm install
           npm run build
-
-      - name: Deploy to github pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.PPTIST }}
-          commit_message: deploy to github pages
-          publish_dir: ./dist

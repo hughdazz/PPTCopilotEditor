@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import tinycolor from 'tinycolor2'
 import { omit } from 'lodash'
-import { Slide, SlideTheme, PPTElement, PPTAnimation } from '@/types/slides'
+import { Slide, SlideTheme, PPTElement, PPTAnimation, PPTTextElement } from '@/types/slides'
 import { slides } from '@/mocks/slides'
 import { theme } from '@/mocks/theme'
 import { layouts } from '@/mocks/layout'
@@ -185,6 +185,55 @@ export const useSlidesStore = defineStore('slides', {
         return el.id === id ? omit(el, propsNames) : el
       })
       this.slides[slideIndex].elements = (elements as PPTElement[])
+    },
+
+    convert_slide_to_dom(slide: Slide, root_name = 'section') {
+      // 功能：输入一页slide，提取有效信息为dom结构并返回
+      // 说明：现只支持对text的提取。暂未保证顺序从上到下、从左到右 TODO
+      // 返回值：dom结构，在顶层进行解析
+
+      // const parser = new DOMParser()
+
+      const page = document.createElement(root_name)
+      page.setAttribute('id', slide.id)
+
+      const elements = slide.elements // 引用传值
+
+      for (let j = 0; j < elements.length; j++) {
+        if (elements[j].type === 'text') {
+          // 使用DOM 获取 XML 文档
+          const textElement = elements[j] as PPTTextElement
+          const container = document.createElement('div')
+          container.innerHTML = textElement.content
+          // 获取元素并操作属性
+
+          console.log(container.firstChild)
+          const text = container.textContent
+
+          const p = document.createElement('p')
+          p.setAttribute('id', elements[j].id)
+          p.textContent = text
+
+          page.appendChild(p)
+        }
+      }
+      // 将xml转换为字符串
+      console.log(page.outerHTML)
+
+      return page
+    },
+
+    convert_slides_to_dom(slides: Slide[], root_name = 'slides') {
+      // 功能：将选中张幻灯片转换为dom
+      // 说明：调用convert_slide_to_dom
+      // 返回值：dom结构，在顶层进行解析
+      
+      const top_dom = document.createElement(root_name)
+      for (let i = 0; i < slides.length; i++) {
+        const page = this.convert_slide_to_dom(slides[i])
+        top_dom.appendChild(page)
+      }
+      return top_dom
     },
   },
 })

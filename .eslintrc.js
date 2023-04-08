@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // https://eslint.org/docs/rules/
 
 const isProduction = process.env.NODE_ENV === 'production'
@@ -47,7 +46,7 @@ module.exports = {
     }],
     'default-case': 'error',
     'consistent-this': ['error', '_this'],
-    'max-depth': ['error', 6],
+    'max-depth': ['error', 8],
     'max-lines': ['error', 800],
     'no-multi-str': 'error',
     'space-infix-ops': 'error',
@@ -80,24 +79,6 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'vue/multi-word-component-names': 'off',
     'vue/no-reserved-component-names': 'off',
-=======
-module.exports = {
-  root: true,
-  env: {
-    node: true
-  },
-  'extends': [
-    'plugin:vue/vue3-essential',
-    'eslint:recommended',
-    '@vue/typescript/recommended'
-  ],
-  parserOptions: {
-    ecmaVersion: 2020
-  },
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'warn' : 'off'
->>>>>>> a291994 (init)
   },
   overrides: [
     {
@@ -106,15 +87,8 @@ module.exports = {
         '**/tests/unit/**/*.spec.{j,t}s?(x)'
       ],
       env: {
-<<<<<<< HEAD
         jest: true,
       },
     },
   ],
-=======
-        jest: true
-      }
-    }
-  ]
->>>>>>> a291994 (init)
 }

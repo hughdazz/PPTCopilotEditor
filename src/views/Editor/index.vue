@@ -6,7 +6,12 @@
       <div class="layout-content-center">
         <CanvasTool class="center-top" />
         <Canvas class="center-body" :style="{ height: `calc(100% - ${remarkHeight + 40}px)` }" />
-        <Remark
+        <!-- <Remark
+          class="center-bottom" 
+          v-model:height="remarkHeight" 
+          :style="{ height: `${remarkHeight}px` }"
+        /> -->
+        <GptChat
           class="center-bottom" 
           v-model:height="remarkHeight" 
           :style="{ height: `${remarkHeight}px` }"
@@ -44,6 +49,7 @@ import CanvasTool from './CanvasTool/index.vue'
 import Thumbnails from './Thumbnails/index.vue'
 import Toolbar from './Toolbar/index.vue'
 import Remark from './Remark/index.vue'
+import GptChat from './GptChat/index.vue'
 import ExportDialog from './ExportDialog/index.vue'
 import SelectPanel from './SelectPanel.vue'
 import { Modal } from 'ant-design-vue'

@@ -24,7 +24,6 @@ import { ToolbarStates } from '@/types/toolbar'
 import ElementStylePanel from './ElementStylePanel/index.vue'
 import ElementPositionPanel from './ElementPositionPanel.vue'
 import ElementAnimationPanel from './ElementAnimationPanel.vue'
-import ElementGptPanel from './ElementGptPanel.vue'
 import SlideDesignPanel from './SlideDesignPanel.vue'
 import SlideAnimationPanel from './SlideAnimationPanel.vue'
 import MultiPositionPanel from './MultiPositionPanel.vue'
@@ -57,7 +56,6 @@ const slideTabs = [
   { label: '设计', value: ToolbarStates.SLIDE_DESIGN },
   { label: '切换', value: ToolbarStates.SLIDE_ANIMATION },
   { label: '动画', value: ToolbarStates.EL_ANIMATION },
-  { label: 'GPT', value: ToolbarStates.EL_GPT },
 ]
 const multiSelectTabs = [
   { label: '样式', value: ToolbarStates.EL_STYLE },
@@ -86,7 +84,6 @@ const currentPanelComponent = computed(() => {
     [ToolbarStates.EL_STYLE]: ElementStylePanel,
     [ToolbarStates.EL_POSITION]: ElementPositionPanel,
     [ToolbarStates.EL_ANIMATION]: ElementAnimationPanel,
-    [ToolbarStates.EL_GPT]: ElementGptPanel,
     [ToolbarStates.SLIDE_DESIGN]: SlideDesignPanel,
     [ToolbarStates.SLIDE_ANIMATION]: SlideAnimationPanel,
     [ToolbarStates.MULTI_POSITION]: MultiPositionPanel,

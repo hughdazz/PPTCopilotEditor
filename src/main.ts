@@ -1,5 +1,4 @@
 import { createApp } from 'vue'
-<<<<<<< HEAD
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import './registerServiceWorker'
@@ -23,10 +22,3 @@ app.use(Directive)
 
 app.use(createPinia())
 app.mount('#app')
-=======
-import App from './App.vue'
-import router from './router'
-import store from './store'
-
-createApp(App).use(store).use(router).mount('#app')
->>>>>>> a291994 (init)

@@ -50,9 +50,9 @@ export const useSnapshotStore = defineStore('snapshot', {
 
       // 获取当前indexeddb中全部快照的ID
       const allKeys = await db.snapshots.orderBy('id').keys()
-
+  
       let needDeleteKeys: IndexableTypeArray = []
-
+  
       // 记录需要删除的快照ID
       // 若当前快照指针不处在最后一位，那么再添加快照时，应该将当前指针位置后面的快照全部删除，对应的实际情况是：
       // 用户撤回多次后，再进行操作（添加快照），此时原先被撤销的快照都应该被删除
@@ -82,13 +82,8 @@ export const useSnapshotStore = defineStore('snapshot', {
       if (snapshotLength >= 2) {
         db.snapshots.update(allKeys[snapshotLength - 2] as number, { index: slidesStore.slideIndex })
       }
-<<<<<<< HEAD
   
-      // await db.snapshots.bulkDelete(needDeleteKeys)
-=======
-      const keysToDelete: number[] = needDeleteKeys.map(Number)
-      await db.snapshots.bulkDelete(keysToDelete)
->>>>>>> 898a4ec (fix snapshot)
+      await db.snapshots.bulkDelete(needDeleteKeys)
   
       this.setSnapshotCursor(snapshotLength - 1)
       this.setSnapshotLength(snapshotLength)

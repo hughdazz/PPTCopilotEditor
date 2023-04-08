@@ -9,19 +9,12 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-<<<<<<< HEAD
     "suppressImplicitAnyIndexErrors":true,
-=======
->>>>>>> a291994 (init)
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
       "webpack-env",
-<<<<<<< HEAD
       "resize-observer-browser"
-=======
-      "jest"
->>>>>>> a291994 (init)
     ],
     "paths": {
       "@/*": [

@@ -1,6 +1,5 @@
 module.exports = {
   presets: [
-<<<<<<< HEAD
     '@vue/cli-plugin-babel/preset',
   ],
   plugins: [
@@ -23,8 +22,4 @@ module.exports = {
       'iconPark',
     ],
   ],
-=======
-    '@vue/cli-plugin-babel/preset'
-  ]
->>>>>>> a291994 (init)
 }

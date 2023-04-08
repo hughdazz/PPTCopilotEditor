@@ -1,7 +1,6 @@
 export const enum ToolbarStates {
   SYMBOL = 'symbol',
   EL_ANIMATION = 'elAnimation',
-  EL_GPT = '',
   EL_STYLE = 'elStyle',
   EL_POSITION = 'elPosition',
   SLIDE_DESIGN = 'slideDesign',

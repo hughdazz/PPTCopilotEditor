@@ -13,5 +13,5 @@ export const get_catalog = (params: FormData) => {
 }
 
 export const update_slides = (params: FormData) => {
-  return axios.post<FormData>('/update_slides', params)
+  return axios.post<object>('/update_slides', params)
 }

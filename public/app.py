@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 import requests
 import json
-
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -166,7 +165,7 @@ def update_slides():
     
     final_prompt = '''
     你将接收用户的指令去处理一个ppt，ppt的表示方式是xml格式的字符串。
-    用户的指令是：{0}。请同时帮我把这个ppt中双括号{3}括起来的部分替换为‘{0}’相关内容；
+    用户的指令是：{0}。请同时帮我把这个ppt中双括号{2}括起来的部分替换为‘{0}’相关内容；
     要处理的ppt是：{1}；
     请你按照用户的指令对以xml格式表示的ppt进行处理。
     注意：你只用返回处理后的xml格式字符串，且不要带任何注释，谢谢！
@@ -176,8 +175,14 @@ def update_slides():
 
     chat_pool.add_message(user_name, "assistant", generated_text)
     
+    # generated_text= 'okok'
+    
     return {
-      'data' : generated_text
+      'code' : 200,
+      'data' : {
+        "xml_ppt":generated_text,
+      },
+      'msg' : 'ok'
     }
 
 

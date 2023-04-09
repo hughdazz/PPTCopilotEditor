@@ -261,15 +261,10 @@ export const useSlidesStore = defineStore('slides', {
         console.error('XML 解析失败 when update_xml_to_dom_to_slide')
       }
       else {
-        console.log('XML 解析成功')
-
-        console.log(xml)
-
-        // 从根节点开始遍历
-        // this.traverse(top_dom.documentElement)
+        console.log('XML 解析成功\n', xml)
 
         top_dom.querySelectorAll('slide').forEach((slide) => {
-          console.log(slide)
+          // console.log(slide)
           const slide_id = slide.getAttribute('id')
           const slide_index = slides_all.findIndex((slide) => slide.id === slide_id)
           if (slide_index === -1) {
@@ -283,7 +278,7 @@ export const useSlidesStore = defineStore('slides', {
 
               if (child.nodeType === Node.ELEMENT_NODE) {
 
-                console.log(child.nodeType, child.textContent, child instanceof Element)
+                // console.log(child.nodeType, child.textContent, child instanceof Element)
                 const p = child as Element
                 const element_id = p.getAttribute('id')
                 const element_index = inner_slide.elements.findIndex((element) => element.id === element_id)
@@ -294,22 +289,13 @@ export const useSlidesStore = defineStore('slides', {
                   const inner_textElement = inner_slide.elements[element_index] as PPTTextElement
                   const target_textContent = p.textContent as string
 
-                  console.log('origin xml:', inner_textElement.content)
-                  console.log('target xml:', p.outerHTML)
-                  console.log('target txt:', target_textContent)
+                  // console.log('origin xml:', inner_textElement.content)
+                  // console.log('target xml:', p.outerHTML)
+                  // console.log('target txt:', target_textContent)
 
-                  const child_dom = parser.parseFromString(inner_textElement.content, 'application/xml')
-                  let node = child_dom.documentElement.childNodes[0]
-                  while (node.childNodes.length > 0) {
-                    node = node.childNodes[0]
-                  }
-
-                  console.log('要修改的结点值', node.textContent)
-                  node.textContent = target_textContent
-                  console.log('修改后的结点值', node.textContent)
-                  console.log('最终结果', child_dom.documentElement.outerHTML)
-                  
-                  inner_textElement.content = child_dom.documentElement.outerHTML
+                  p.removeAttribute('id')
+                  // console.log('最终结果', p.outerHTML)
+                  inner_textElement.content = p.outerHTML
                 }
               }
 
@@ -365,17 +351,18 @@ export const useSlidesStore = defineStore('slides', {
 </slide>
 </slides>
       `
-
       this.update_xml_to_dom_to_slide(receive_xml, this.slides)
 
       // update_slides(formData).then((response) => {
-      //   const a = response.data
-      //   console.log('res:', a)
-      //   console.log('res_json:', JSON.stringify(a, null, 2))
+      //   console.log('response:', JSON.stringify(response, null, 2))
+      //   const data = response.data 
+      //   if (data) {
+      //     receive_xml = data['xml_ppt']
+      //     this.update_xml_to_dom_to_slide(receive_xml, this.slides)
+      //   }
       // }).catch(error => {
       //   console.error('An error occurred:', error)
       // })
-
     },
 
   },

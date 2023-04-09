@@ -15,7 +15,7 @@ interface ResultData<T> extends Result {
 
 const URL = 'http://127.0.0.1:5000'
 enum RequestEnums {
-  TIMEOUT = 100000, // 超时时间，要设置的很大！！
+  TIMEOUT = 200000, // 超时时间，要设置的很大！！
   OVERDUE = 600, // 登录失效
   FAIL = 999, // 请求失败
   SUCCESS = 200, // 请求成功

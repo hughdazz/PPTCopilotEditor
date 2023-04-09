@@ -240,15 +240,7 @@ export const useSlidesStore = defineStore('slides', {
       }
       return top_dom
     },
-    traverse(node: ChildNode, depth = 0) {
-      // 打印当前节点的节点名称和深度
-      console.log(' '.repeat(depth * 2) + node.nodeName, node.ownerDocument)
-    
-      // 遍历子节点
-      for (const child of node.childNodes) {
-        this.traverse(child, depth + 1)
-      }
-    },
+
     update_xml_to_dom_to_slide(xml: string, slides_all = slides) {
       // 功能：将xml转换为dom，再更新到id对应的slide中
       // 说明：根据xml中的slide_id去找到要更新的slide(因此传入所有幻灯片指针)，根据xml中的element_id去找到要更新的element
@@ -258,17 +250,17 @@ export const useSlidesStore = defineStore('slides', {
       const top_dom = parser.parseFromString(xml, 'application/xml')
 
       if (top_dom.documentElement.nodeName === 'parsererror') {
-        console.error('XML 解析失败 when update_xml_to_dom_to_slide')
+        // console.error('XML 解析失败 when update_xml_to_dom_to_slide')
       }
       else {
-        console.log('XML 解析成功\n', xml)
+        // console.log('XML 解析成功\n', xml)
 
         top_dom.querySelectorAll('slide').forEach((slide) => {
           // console.log(slide)
           const slide_id = slide.getAttribute('id')
           const slide_index = slides_all.findIndex((slide) => slide.id === slide_id)
           if (slide_index === -1) {
-            console.error('未找到slide_id对应的slide')
+            // console.error('未找到slide_id对应的slide')
           }
           else {
             const inner_slide = slides_all[slide_index]
@@ -283,7 +275,7 @@ export const useSlidesStore = defineStore('slides', {
                 const element_id = p.getAttribute('id')
                 const element_index = inner_slide.elements.findIndex((element) => element.id === element_id)
                 if (element_index === -1) {
-                  console.error(`未找到element_id${element_id}对应的element`)
+                  // console.error(`未找到element_id${element_id}对应的element`)
                 }
                 else {
                   const inner_textElement = inner_slide.elements[element_index] as PPTTextElement

@@ -5,9 +5,12 @@ import { Slide, SlideTheme, PPTElement, PPTAnimation, PPTTextElement } from '@/t
 import { slides } from '@/mocks/slides'
 import { theme } from '@/mocks/theme'
 import { layouts } from '@/mocks/layout'
-import { get_catalog, update_slides} from '@/api/ppt_Request_gpt'
-import { SetRequired } from 'type-fest'
-import { Chili } from '@icon-park/vue-next'
+import { update_slides, UpdateSlidesRequest } from '@/api/ppt_Request_gpt'
+import useSlide2Dom from '@/hooks/useSlide2Dom'
+import useXml2Slide from '@/hooks/useXml2Slide'
+
+const { convert_slides_to_dom } = useSlide2Dom()
+const { update_xml_to_dom_to_slide } = useXml2Slide()
 
 interface RemoveElementPropData {
   id: string
@@ -190,131 +193,17 @@ export const useSlidesStore = defineStore('slides', {
       this.slides[slideIndex].elements = (elements as PPTElement[])
     },
 
-    convert_slide_to_dom(slide: Slide, root_name = 'slide') {
-      // 功能：输入一页slide，提取有效信息为dom结构并返回
-      // 说明：现只支持对text的提取。暂未保证顺序从上到下、从左到右 TODO
-      // 返回值：dom结构，在顶层进行解析
-
-      // const parser = new DOMParser()
-
-      const page = document.createElement(root_name)
-      page.setAttribute('id', slide.id)
-
-      const elements = slide.elements // 引用传值
-
-      const parser = new DOMParser()
-
-      for (let j = 0; j < elements.length; j++) {
-        if (elements[j].type === 'text') {
-          // 使用DOM 获取 XML 文档
-          const textElement = elements[j] as PPTTextElement
-
-          const top_Element_dom = parser.parseFromString(textElement.content, 'application/xml')
-          top_Element_dom.documentElement.setAttribute('id', textElement.id)
-          // top_Element_dom.documentElement.setAttribute('left', textElement.left.toString())
-          // top_Element_dom.documentElement.setAttribute('top', textElement.top.toString())
-          // top_Element_dom.documentElement.setAttribute('width', textElement.width.toString())
-          // top_Element_dom.documentElement.setAttribute('height', textElement.height.toString())
-          // top_Element_dom.documentElement.setAttribute('rotate', textElement.rotate.toString())
-
-          const text = top_Element_dom.documentElement.outerHTML
-
-          page.appendChild(top_Element_dom.documentElement)
-        }
-      }
-      // 将xml转换为字符串
-      // console.log(page.outerHTML)
-
-      return page
-    },
-
-    convert_slides_to_dom(slides: Slide[], root_name = 'slides') {
-      // 功能：将选中张幻灯片转换为dom
-      // 说明：调用convert_slide_to_dom。目前，外部只调用convert_slides_to_dom
-      // 返回值：dom结构，在顶层进行解析
-      
-      const top_dom = document.createElement(root_name)
-      for (let i = 0; i < slides.length; i++) {
-        const page = this.convert_slide_to_dom(slides[i])
-        top_dom.appendChild(page)
-      }
-      return top_dom
-    },
-
-    update_xml_to_dom_to_slide(xml: string, slides_all = slides) {
-      // 功能：将xml转换为dom，再更新到id对应的slide中
-      // 说明：根据xml中的slide_id去找到要更新的slide(因此传入所有幻灯片指针)，根据xml中的element_id去找到要更新的element
-      // 返回值：
-
-      const parser = new DOMParser()
-      const top_dom = parser.parseFromString(xml, 'application/xml')
-
-      if (top_dom.documentElement.nodeName === 'parsererror') {
-        // console.error('XML 解析失败 when update_xml_to_dom_to_slide')
-      }
-      else {
-        // console.log('XML 解析成功\n', xml)
-
-        top_dom.querySelectorAll('slide').forEach((slide) => {
-          // console.log(slide)
-          const slide_id = slide.getAttribute('id')
-          const slide_index = slides_all.findIndex((slide) => slide.id === slide_id)
-          if (slide_index === -1) {
-            // console.error('未找到slide_id对应的slide')
-          }
-          else {
-            const inner_slide = slides_all[slide_index]
-            // 注意：这是遍历直接子级元素
-            let child: ChildNode | null = slide.firstChild
-            while (child) {
-
-              if (child.nodeType === Node.ELEMENT_NODE) {
-
-                // console.log(child.nodeType, child.textContent, child instanceof Element)
-                const p = child as Element
-                const element_id = p.getAttribute('id')
-                const element_index = inner_slide.elements.findIndex((element) => element.id === element_id)
-                if (element_index === -1) {
-                  // console.error(`未找到element_id${element_id}对应的element`)
-                }
-                else {
-                  const inner_textElement = inner_slide.elements[element_index] as PPTTextElement
-                  const target_textContent = p.textContent as string
-
-                  // console.log('origin xml:', inner_textElement.content)
-                  // console.log('target xml:', p.outerHTML)
-                  // console.log('target txt:', target_textContent)
-
-                  p.removeAttribute('id')
-                  // console.log('最终结果', p.outerHTML)
-                  inner_textElement.content = p.outerHTML
-                }
-              }
-
-              if (child?.nextSibling) {
-                child = child.nextSibling 
-              }
-              else {
-                break
-              }
-            }
-          }
-
-        })
-      }
-
-
-    },
-
     request_update_slides(prompt: string): void {
-      const formData = new FormData()
-      formData.append('user_name', 'ljf')
-      formData.append('prompt', prompt)
+      const update_slides_requset: UpdateSlidesRequest = {
+        'prompt': '',
+        'ppt_xml': '',
+      }
+      update_slides_requset['prompt'] = prompt
 
-      const dom_top = this.convert_slides_to_dom(this.slides)
-      formData.append('ppt_xml', dom_top.outerHTML)
+      const dom_top = convert_slides_to_dom(this.slides)
+      update_slides_requset['ppt_xml'] = dom_top.outerHTML
 
-      const receive_xml = `
+      let receive_xml = `
 <slides>
 <slide id="test-slide-1">
     <p id="idn7Mx"><strong><span style="font-size:  112px">论语</span></strong></p>
@@ -343,18 +232,18 @@ export const useSlidesStore = defineStore('slides', {
 </slide>
 </slides>
       `
-      this.update_xml_to_dom_to_slide(receive_xml, this.slides)
+      // this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
 
-      // update_slides(formData).then((response) => {
-      //   console.log('response:', JSON.stringify(response, null, 2))
-      //   const data = response.data 
-      //   if (data) {
-      //     receive_xml = data['xml_ppt']
-      //     this.update_xml_to_dom_to_slide(receive_xml, this.slides)
-      //   }
-      // }).catch(error => {
-      //   console.error('An error occurred:', error)
-      // })
+      update_slides(update_slides_requset).then((response) => {
+        console.log('response:', JSON.stringify(response, null, 2))
+        const data = response.data 
+        if (data) {
+          receive_xml = data['xml_ppt']
+          this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
+        }
+      }).catch(error => {
+        console.error('An error occurred:', error)
+      })
     },
 
   },

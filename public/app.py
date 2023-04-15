@@ -7,7 +7,7 @@ app = Flask(__name__)
 # app.debug = True
 CORS(app, supports_credentials=True)
 
-api_key = "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"
+api_key = "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"
 
 class ChatContextPool:
     def __init__(self):

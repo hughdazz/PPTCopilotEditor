@@ -203,7 +203,7 @@ export const useSlidesStore = defineStore('slides', {
       const dom_top = convert_slides_to_dom(this.slides)
       update_slides_requset['ppt_xml'] = dom_top.outerHTML
 
-      let receive_xml = `
+      const receive_xml = `
 <slides>
 <slide id="test-slide-1">
     <p id="idn7Mx"><strong><span style="font-size:  112px">论语</span></strong></p>
@@ -232,18 +232,18 @@ export const useSlidesStore = defineStore('slides', {
 </slide>
 </slides>
       `
-      // this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
+      this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
 
-      update_slides(update_slides_requset).then((response) => {
-        console.log('response:', JSON.stringify(response, null, 2))
-        const data = response.data 
-        if (data) {
-          receive_xml = data['xml_ppt']
-          this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
-        }
-      }).catch(error => {
-        console.error('An error occurred:', error)
-      })
+      // update_slides(update_slides_requset).then((response) => {
+      //   console.log('response:', JSON.stringify(response, null, 2))
+      //   const data = response.data 
+      //   if (data) {
+      //     receive_xml = data['xml_ppt']
+      //     this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
+      //   }
+      // }).catch(error => {
+      //   console.error('An error occurred:', error)
+      // })
     },
 
   },

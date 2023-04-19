@@ -38,12 +38,13 @@ const { currentSlide } = storeToRefs(slidesStore)
 
 const gptinput = computed(() => currentSlide.value?.gptinput || '')
 
-slidesStore.request_update_slides('请帮我把这个ppt修改为论语主题')
+// slidesStore.request_update_slides('请帮我把这个ppt修改为论语主题')
 const commitInput = () => {
   // 功能：向后端提交输入的命令
   // 说明：点击按钮出发，输入不为空才提交，提交后清空输入框
   if (gptinput.value === '') return
   history_ls.value.push(gptinput.value)// 记录历史命令
+  slidesStore.request_update_slides(gptinput.value)
   slidesStore.updateSlide({ gptinput: '' })
 }
 
@@ -104,8 +105,8 @@ const resize = (e: MouseEvent) => {
 
   textarea {
     // 调整宽高，给按钮留下空间
-    width: 80%;
-    height: 80%;
+    width: 90%;
+    height: 40%;
     overflow-y: auto;
     resize: none;
     border: 0;
@@ -113,9 +114,20 @@ const resize = (e: MouseEvent) => {
     padding: 8px;
     font-size: 12px;
     background-color: transparent;
+    // cursor: pointer;
+    // background-color: #56cf5a;
+    // border-radius: 8px;
+    // -webkit-transition-duration: 0.4s;
+    // transition-duration: 0.4s;
 
     // @include absolute-0();
   }
+
+  // textarea : {
+  //   background-color: #7ab57c;
+  //   color: rgb(94, 91, 91);
+  //   box-shadow: 0 12px 16px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+  // }
 }
 
 .resize-handler {

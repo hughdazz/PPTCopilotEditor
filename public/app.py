@@ -7,7 +7,7 @@ app = Flask(__name__)
 # app.debug = True
 CORS(app, supports_credentials=True)
 
-api_key = "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"
+api_key = "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"
 
 class ChatContextPool:
     def __init__(self):
@@ -111,11 +111,17 @@ def get_catalog():
 <!--更多的幻灯片・・・-->
 </slides>
     """
-    # receive_data:dict = json.loads(request.data.decode('utf-8'))
-    print('receive:',request.form,type(request.form))
+
+    print(request.data)
+
+    receive_data:dict = json.loads(request.data.decode('utf-8'))
+    
+    print('receive:',receive_data,type(receive_data))
+    
     # 从 JSON 数据中获取 'prompt' 参数
-    core_prompt = request.form.get('prompt')
-    user_name = request.form.get('user_name')
+    
+    core_prompt = receive_data.get('prompt')
+    user_name = receive_data.get('user_name')
  
     prompt = prompt.replace("{{topic}}", core_prompt)
     prompt = prompt.replace("{{user_name}}", user_name)
@@ -157,21 +163,31 @@ def get_detail():
 # 返回：更新后的ppt的xml字符串
 @app.route('/update_slides', methods=['POST'])
 def update_slides():
-    print('receive:',request.form,type(request.form))
+    # print('receive:',request.form,type(request.form))
+    # user_name = request.form.get('user_name')
+    # prompt = request.form.get('prompt')
+    # ppt_xml = request.form.get('ppt_xml')
     
-    user_name = request.form.get('user_name')
-    prompt = request.form.get('prompt')
-    ppt_xml = request.form.get('ppt_xml')
+    receive_data:dict = json.loads(request.data.decode('utf-8'))
+    user_name = receive_data.get('user_name')
+    prompt = receive_data.get('prompt')
+    ppt_xml = receive_data.get('ppt_xml')
     
     final_prompt = '''
     你将接收用户的指令去处理一个ppt，ppt的表示方式是xml格式的字符串。
-    用户的指令是：{0}。请同时帮我把这个ppt中双括号{2}括起来的部分替换为‘{0}’相关内容；
-    要处理的ppt是：{1}；
-    请你按照用户的指令对以xml格式表示的ppt进行处理。
+    用户的指令是：{0}。
+    要处理的ppt是：{1}。
     注意：你只用返回处理后的xml格式字符串，且不要带任何注释，谢谢！
     说明：用双括号{2}括起来的文本表示模板信息，是你一定要替换的部分'''.format(prompt,ppt_xml,'{{}}')
     
-    generated_text = chat_pool.request_chat_gpt(user_name, final_prompt, api_key)
+    final_qusetion = '''
+    给出ppt的表⽰，
+    {0}
+，不要带任何注释性⽂字,保持标签属性不变.
+{1}
+    '''.format(prompt,ppt_xml)
+    
+    generated_text = chat_pool.request_chat_gpt(user_name, final_qusetion, api_key)
 
     chat_pool.add_message(user_name, "assistant", generated_text)
     

@@ -200,50 +200,42 @@ export const useSlidesStore = defineStore('slides', {
       }
       update_slides_requset['prompt'] = prompt
 
-      const dom_top = convert_slides_to_dom(this.slides)
+      const target_slides = [this.slides[this.slideIndex]]
+
+      const dom_top = convert_slides_to_dom(target_slides)
       update_slides_requset['ppt_xml'] = dom_top.outerHTML
 
-      const receive_xml = `
-<slides>
-<slide id="test-slide-1">
-    <p id="idn7Mx"><strong><span style="font-size:  112px">论语</span></strong></p>
-    <p id="7stmVP"><span style="font-size:  24px">孔子的智慧与教导</span></p>
-</slide>
-<slide id="yH_-FXmhGU">
-    <p style="text-align: center;" id="tEyqPBBaml"><strong><span style="font-size: 112px">论语导言</span></strong></p>
-    <p style="" id="VCguVf4l1B"><span style="font-size: 24px">论语是儒家学派的经典文献，记录了孔子及其弟子的言行。</span></p>
-</slide>
-<slide id="Gh9ZjY8j3H">
-    <p style="text-align: center;" id="sL7xvxns-u"><strong><span style="font-size: 48px">目录</span></strong></p>
-    <ol style="list-style-type: lower-roman;" id="tS11ELDqgH">
-        <li><p style="text-align: center;"><span style="font-size: 28px">论语简介</span></p></li>
-        <li><p style="text-align: center;"><span style="font-size: 28px">孔子的思想</span></p></li>
-        <li><p style="text-align: center;"><span style="font-size: 28px">论语的影响</span></p></li>
-    </ol>
-</slide>
-<slide id="S_cO7EuNcV">
-    <p style="text-align: center;" id="07pzVgNyIZ"><strong><span style="font-size: 48px">论语简介</span></strong></p>
-    <ol style="list-style-type: lower-roman;" id="eIiAj3VJSZ">
-        <li><p style="text-align: center;"><span style="font-size: 28px">成书时间</span></p></li>
-        <li><p style="text-align: center;"><span style="font-size: 28px">作者及其弟子</span></p></li>
-        <li><p style="text-align: center;"><span style="font-size: 28px">内容结构</span></p></li>
-        <li><p style="text-align: center;"><span style="font-size: 28px">主要观点</span></p></li>
-    </ol>
-</slide>
+      let receive_xml = `
+      <slides>
+  <slide id="test-slide-1">
+    <p id="idn7Mx">论语</p>
+    <p id="7stmVP">有朋自远方来，不亦乐乎。</p>
+  </slide>
 </slides>
-      `
-      this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
+`
+      // console.log(update_slides_requset['ppt_xml'])
 
-      // update_slides(update_slides_requset).then((response) => {
-      //   console.log('response:', JSON.stringify(response, null, 2))
-      //   const data = response.data 
-      //   if (data) {
-      //     receive_xml = data['xml_ppt']
-      //     this.slides = update_xml_to_dom_to_slide(receive_xml, this.slides)
-      //   }
-      // }).catch(error => {
-      //   console.error('An error occurred:', error)
-      // })
+      // const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
+      // for (let i = 0; i < res_slides.length; i++) {
+      //   target_slides[i] = res_slides[i]
+      // }
+      // this.slides[this.slideIndex] = res_slides[0]
+
+      update_slides(update_slides_requset).then((response) => {
+        console.log('response:', JSON.stringify(response, null, 2))
+        const data = response.data 
+        if (data) {
+          receive_xml = data['xml_ppt']
+          const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
+          // for (let i = 0; i < res_slides.length; i++) {
+          //   target_slides[i] = res_slides[i]
+          // }
+          this.slides[this.slideIndex] = res_slides[0]
+        }
+      }).catch(error => {
+        console.error('An error occurred:', error)
+      })
+
     },
 
   },

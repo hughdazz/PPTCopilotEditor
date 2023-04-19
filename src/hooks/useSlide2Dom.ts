@@ -1,3 +1,10 @@
+/*
+ * @Author: ljf@2054316
+ * @Description: 
+ * @Date: 2023-04-15 11:30:13
+ * @LastEditTime: 2023-04-18 23:26:34
+ * @FilePath: \PPTCopilot\src\hooks\useSlide2Dom.ts
+ */
 import { Slide, PPTTextElement} from '@/types/slides'
 
 export default () => {
@@ -20,20 +27,28 @@ export default () => {
         // 使用DOM 获取 XML 文档
         const textElement = elements[j] as PPTTextElement
 
+        const my_Element_dom = document.createElement('p')
+
         const top_Element_dom = parser.parseFromString(textElement.content, 'application/xml')
-        top_Element_dom.documentElement.setAttribute('id', textElement.id)
+        
+        my_Element_dom.setAttribute('id', textElement.id)
+        my_Element_dom.textContent = top_Element_dom.documentElement.textContent
+
         // top_Element_dom.documentElement.setAttribute('left', textElement.left.toString())
         // top_Element_dom.documentElement.setAttribute('top', textElement.top.toString())
         // top_Element_dom.documentElement.setAttribute('width', textElement.width.toString())
         // top_Element_dom.documentElement.setAttribute('height', textElement.height.toString())
         // top_Element_dom.documentElement.setAttribute('rotate', textElement.rotate.toString())
 
-        const text = top_Element_dom.documentElement.outerHTML
+        
+        const text = top_Element_dom.textContent
+        // console.log(top_Element_dom.documentElement.textContent)
 
-        page.appendChild(top_Element_dom.documentElement)
+        page.appendChild(my_Element_dom)
       }
     }
-    // 将xml转换为字符串
+
+    // 输出将xml转换为字符串
     // console.log(page.outerHTML)
 
     return page

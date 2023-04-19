@@ -1,6 +1,6 @@
 import { Slide } from '@/types/slides'
 
-export const slides: Slide[] = [
+const slides_demo: Slide[] = [
   {
     id: 'test-slide-1',
     elements: [
@@ -184,3 +184,28 @@ export const slides: Slide[] = [
     },
   },
 ]
+
+const readFile = (filePath: string) => {
+  // 输入文件路径，读取文件，返回string
+  // 文件放在public目录下，所以路径是相对于public的路径
+  let xhr = null
+  if (window.XMLHttpRequest) {
+    xhr = new XMLHttpRequest()
+  }
+  else {
+    // eslint-disable-next-line
+    xhr = new ActiveXObject('Microsoft.XMLHTTP')
+  }
+  const okStatus = document.location.protocol === 'file' ? 0 : 200
+  xhr.open('GET', filePath, false)
+  xhr.overrideMimeType('text/html;charset=utf-8')
+  xhr.send(null)
+  return xhr.status === okStatus ? xhr.responseText : null
+}
+
+// 改这两个参数进行调试
+const choice_isdemo = false
+const template_json_path = './ppt_template/pptist_slides.json'
+
+export const slides: Slide[] = choice_isdemo ? slides_demo : JSON.parse(readFile(template_json_path))
+

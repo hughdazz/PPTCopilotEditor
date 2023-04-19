@@ -678,6 +678,7 @@ export interface Slide {
   id: string
   elements: PPTElement[]
   remark?: string
+  gptinput?: string
   background?: SlideBackground
   animations?: PPTAnimation[]
   turningMode?: TurningMode

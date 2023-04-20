@@ -1,10 +1,16 @@
 import { defineStore } from 'pinia'
 import tinycolor from 'tinycolor2'
 import { omit } from 'lodash'
-import { Slide, SlideTheme, PPTElement, PPTAnimation } from '@/types/slides'
+import { Slide, SlideTheme, PPTElement, PPTAnimation, PPTTextElement } from '@/types/slides'
 import { slides } from '@/mocks/slides'
 import { theme } from '@/mocks/theme'
 import { layouts } from '@/mocks/layout'
+import { update_slides, UpdateSlidesRequest } from '@/api/ppt_Request_gpt'
+import useSlide2Dom from '@/hooks/useSlide2Dom'
+import useXml2Slide from '@/hooks/useXml2Slide'
+
+const { convert_slides_to_dom } = useSlide2Dom()
+const { update_xml_to_dom_to_slide } = useXml2Slide()
 
 interface RemoveElementPropData {
   id: string
@@ -186,5 +192,51 @@ export const useSlidesStore = defineStore('slides', {
       })
       this.slides[slideIndex].elements = (elements as PPTElement[])
     },
+
+    request_update_slides(prompt: string): void {
+      const update_slides_requset: UpdateSlidesRequest = {
+        'prompt': '',
+        'ppt_xml': '',
+      }
+      update_slides_requset['prompt'] = prompt
+
+      const target_slides = [this.slides[this.slideIndex]]
+
+      const dom_top = convert_slides_to_dom(target_slides)
+      update_slides_requset['ppt_xml'] = dom_top.outerHTML
+
+      let receive_xml = `
+      <slides>
+  <slide id="test-slide-1">
+    <p id="idn7Mx">论语</p>
+    <p id="7stmVP">有朋自远方来，不亦乐乎。</p>
+  </slide>
+</slides>
+`
+      // console.log(update_slides_requset['ppt_xml'])
+
+      // const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
+      // for (let i = 0; i < res_slides.length; i++) {
+      //   target_slides[i] = res_slides[i]
+      // }
+      // this.slides[this.slideIndex] = res_slides[0]
+
+      update_slides(update_slides_requset).then((response) => {
+        console.log('response:', JSON.stringify(response, null, 2))
+        const data = response.data 
+        if (data) {
+          receive_xml = data['xml_ppt']
+          const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
+          // for (let i = 0; i < res_slides.length; i++) {
+          //   target_slides[i] = res_slides[i]
+          // }
+          this.slides[this.slideIndex] = res_slides[0]
+        }
+      }).catch(error => {
+        console.error('An error occurred:', error)
+      })
+
+    },
+
   },
 })

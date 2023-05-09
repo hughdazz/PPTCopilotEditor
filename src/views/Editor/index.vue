@@ -56,6 +56,7 @@ import SelectPanel from './SelectPanel.vue'
 import {Modal} from 'ant-design-vue'
 import ChatBox from '@/components/ChatBox.vue'
 
+
 const mainStore = useMainStore()
 const {dialogForExport, showSelectPanel} = storeToRefs(mainStore)
 const closeExportDialog = () => mainStore.setDialogForExport('')
@@ -64,6 +65,92 @@ const remarkHeight = ref(40)
 
 useGlobalHotkey()
 usePasteEvent()
+
+
+</script>
+
+<script lang="ts">
+import {ElLoading, ElMessageBox} from 'element-plus'
+
+const loading = ElLoading.service({
+  lock: true,
+  text: '加载中...',
+  spinner: 'el-icon-loading',
+  background: 'rgba(0, 0, 0, 0.7)'
+})
+
+const hideLoading = () => {
+  loading.close()
+}
+
+import RequestHttp from '@/utils/axiosRequest'
+
+export default {
+  created() {
+    const loadingEl = document.querySelector('.el-loading-text')
+    // if (loadingEl) {
+    //   loadingEl.innerHTML = '你好'
+    // }
+
+    // 获取路由参数
+    const reg = /id=(\d+)/
+    const result = window.location.href.match(reg)
+    const id = result ? result[1] : ''
+    if (loadingEl) {
+      loadingEl.innerHTML = result ? result[1] : '没有匹配到'
+    }
+    // 进行axios请求
+    RequestHttp.get('/gpt/outline/' + id).then(res => {
+
+      // 解析res.data
+      // { Id:...,Outline:'xxx' }
+      const data = JSON.parse(JSON.stringify(res.data))
+      const outline = data.Outline
+      if (loadingEl) {
+        loadingEl.innerHTML = outline
+      }
+      // 使用domparser解析outline
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(outline, 'text/xml')
+      const slides = doc.getElementsByTagName('slides')
+      if (loadingEl) {
+        loadingEl.innerHTML = slides.length.toString()
+      }
+      const sectionList = slides[0].getElementsByTagName('section')
+      if (loadingEl) {
+        loadingEl.innerHTML = sectionList.length.toString()
+      }
+
+      async function replaceSections() {
+        for (let i = 2; i < sectionList.length; i++) {
+          // 请求，进行替换
+          if (loadingEl) {
+            loadingEl.innerHTML = '正在生成第' + i + '页ppt'
+          }
+          try {
+            const res = await RequestHttp.post('/gpt/guide_slide', {
+              'outline': sectionList[i].innerHTML
+            })
+            const outline = JSON.parse(JSON.stringify(res.data))
+            // 替换
+            sectionList[i].innerHTML = outline
+            console.log(sectionList[i].innerHTML)
+          }
+          catch (error) {
+            console.log(error)
+          }
+        }
+      }
+
+      replaceSections().then(() => {
+        // 替换完成，进行保存
+      })
+
+    })
+  }
+}
+
+
 </script>
 
 <style lang="scss" scoped>

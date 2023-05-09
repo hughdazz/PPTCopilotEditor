@@ -2,9 +2,9 @@
   <div class="slide-design-panel">
     <div class="title">背景填充</div>
     <div class="row">
-      <Select 
-        style="flex: 10;" 
-        :value="background.type" 
+      <Select
+        style="flex: 10;"
+        :value="background.type"
         @change="value => updateBackgroundType(value as 'gradient' | 'image' | 'solid')"
       >
         <SelectOption value="solid">纯色填充</SelectOption>
@@ -23,9 +23,9 @@
         <ColorButton :color="background.color || '#fff'" style="flex: 10;" />
       </Popover>
 
-      <Select 
-        style="flex: 10;" 
-        :value="background.imageSize || 'cover'" 
+      <Select
+        style="flex: 10;"
+        :value="background.imageSize || 'cover'"
         @change="value => updateBackground({ imageSize: value as 'repeat' | 'cover' | 'contain' })"
         v-else-if="background.type === 'image'"
       >
@@ -34,9 +34,9 @@
         <SelectOption value="cover">缩放铺满</SelectOption>
       </Select>
 
-      <Select 
-        style="flex: 10;" 
-        :value="background.gradientType" 
+      <Select
+        style="flex: 10;"
+        :value="background.gradientType"
         @change="value => updateBackground({ gradientType: value as 'linear' | 'radial' })"
         v-else
       >
@@ -88,7 +88,7 @@
           :max="360"
           :step="15"
           :value="background.gradientRotate"
-          @change="value => updateBackground({ gradientRotate: value as number })" 
+          @change="value => updateBackground({ gradientRotate: value as number })"
         />
       </div>
     </div>
@@ -172,9 +172,9 @@
 
     <div class="title">预置主题</div>
     <div class="theme-list">
-      <div 
-        class="theme-item" 
-        v-for="(item, index) in PRESET_THEMES" 
+      <div
+        class="theme-item"
+        v-for="(item, index) in PRESET_THEMES"
         :key="index"
         :style="{
           backgroundColor: item.background,

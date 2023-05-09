@@ -1,5 +1,5 @@
 <template>
-  <div 
+  <div
     class="thumbnails"
     @mousedown="() => setThumbnailsFocus(true)"
     v-click-outside="() => setThumbnailsFocus(false)"
@@ -15,7 +15,7 @@
       </Popover>
     </div>
 
-    <Draggable 
+    <Draggable
       class="thumbnail-list"
       :modelValue="slides"
       :animation="200"

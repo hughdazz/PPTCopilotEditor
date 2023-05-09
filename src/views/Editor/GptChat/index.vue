@@ -1,24 +1,26 @@
 <template>
-  <div class="GptChat">
-    <div class="resize-handler" @mousedown="$event => resize($event)"></div>
+    <div class="GptChat">
+        <div class="resize-handler" @mousedown="$event => resize($event)"></div>
 
-    <div class="GptChat_content">
-      <ul v-if="history_ls.length > 0">
-        <li class="my_li_tittle">历史记录</li>
-        <li class="my_li" v-for="history in history_ls" :key="history">
-          {{ history }}
-        </li>
-      </ul>
-      <textarea :value="gptinput" placeholder="点击输入您的编辑需求" @input="$event => handleInput($event)"></textarea>
-      <button @click="commitInput">提交</button>
+        <div class="GptChat_content">
+            <ul v-if="history_ls.length > 0">
+                <li class="my_li_tittle">历史记录</li>
+                <li class="my_li" v-for="history in history_ls" :key="history">
+                    {{ history }}
+                </li>
+            </ul>
+            <textarea :value="gptinput" placeholder="点击输入您的编辑需求"
+                      @input="$event => handleInput($event)"></textarea>
+            <button @click="commitInput">提交</button>
+        </div>
     </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useSlidesStore } from '@/store'
+import {computed, ref} from 'vue'
+import {storeToRefs} from 'pinia'
+import {useSlidesStore} from '@/store'
+import ChatBox from '@/components/ChatBox.vue'
 
 const history_ls = ref<string[]>([])
 
@@ -34,7 +36,7 @@ const emit = defineEmits<{
 }>()
 
 const slidesStore = useSlidesStore()
-const { currentSlide } = storeToRefs(slidesStore)
+const {currentSlide} = storeToRefs(slidesStore)
 
 const gptinput = computed(() => currentSlide.value?.gptinput || '')
 
@@ -45,12 +47,12 @@ const commitInput = () => {
   if (gptinput.value === '') return
   history_ls.value.push(gptinput.value)// 记录历史命令
   slidesStore.request_update_slides(gptinput.value)
-  slidesStore.updateSlide({ gptinput: '' })
+  slidesStore.updateSlide({gptinput: ''})
 }
 
 const handleInput = (e: Event) => {
   const value = (e.target as HTMLTextAreaElement).value
-  slidesStore.updateSlide({ gptinput: value })
+  slidesStore.updateSlide({gptinput: value})
 }
 
 const resize = (e: MouseEvent) => {

@@ -3,6 +3,9 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import './registerServiceWorker'
 
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
 import '@icon-park/vue-next/styles/index.css'
 import 'prosemirror-view/style/prosemirror.css'
 import 'animate.css'
@@ -19,6 +22,8 @@ const app = createApp(App)
 
 app.use(Icon)
 app.use(Directive)
+
+app.use(ElementPlus)
 
 app.use(createPinia())
 app.mount('#app')

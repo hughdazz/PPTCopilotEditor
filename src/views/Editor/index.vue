@@ -64,6 +64,15 @@ const remarkHeight = ref(40)
 
 useGlobalHotkey()
 usePasteEvent()
+
+window.addEventListener('message', function(event) {
+  // 检查消息来源
+  if (event.origin !== 'http://localhost:9529') return
+  // 输出或处理接收到的消息
+  const token: string = event.data
+  document.cookie = `token=${token};`
+}, false)
+
 </script>
 
 <style lang="scss" scoped>

@@ -49,7 +49,7 @@ class RequestHttp {
         return {
           ...config,
           headers: {
-            // 'x-access-token': token, // 请求头中携带token信息
+            // 'token': localstorage['token'], // 请求头中携带token信息
           }
         }
       },

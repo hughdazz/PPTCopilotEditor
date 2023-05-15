@@ -13,11 +13,14 @@
 <script lang="ts">
 import {defineComponent, ref, onMounted} from 'vue'
 import {ElInput, ElButton} from 'element-plus'
+import {useSlidesStore} from '@/store'
+import {storeToRefs} from 'pinia'
 
 interface ChatHistoryItem {
   id: number;
   content: string;
 }
+
 
 export default defineComponent({
   name: 'ChatBox',
@@ -32,6 +35,9 @@ export default defineComponent({
     const chatHistory = ref<ChatHistoryItem[]>([])
     const message = ref('')
 
+    const slidesStore = useSlidesStore()
+    const {currentSlide} = storeToRefs(slidesStore)
+
     const submitMessage = () => {
       if (message.value) {
         chatHistory.value.push({
@@ -39,6 +45,7 @@ export default defineComponent({
           content: message.value,
         })
         message.value = ''
+        slidesStore.request_update_slides(chatHistory.value[chatHistory.value.length - 1].content)
         scrollToBottom()
       }
     }

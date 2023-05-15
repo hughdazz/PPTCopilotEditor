@@ -22,7 +22,7 @@
                 <div class="menu-item">
                     <IconEdit/>
                     <span class="text">编辑</span></div>
-                <template #overlay>
+                <template #overlay  >
                     <Menu>
                         <MenuItem @click="undo()">撤销</MenuItem>
                         <MenuItem @click="redo()">重做</MenuItem>

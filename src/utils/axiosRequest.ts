@@ -13,7 +13,7 @@ interface ResultData<T> extends Result {
   data?: T;
 }
 
-const URL = 'http://127.0.0.1:5000'
+const URL = 'http://127.0.0.1:8080'
 enum RequestEnums {
   TIMEOUT = 200000, // 超时时间，要设置的很大！！
   OVERDUE = 600, // 登录失效
@@ -49,7 +49,7 @@ class RequestHttp {
         return {
           ...config,
           headers: {
-            // 'x-access-token': token, // 请求头中携带token信息
+            // 'token': localstorage['token'], // 请求头中携带token信息
           }
         }
       },
@@ -123,7 +123,6 @@ class RequestHttp {
     return this.service.delete(url, {params})
   }
 }
- 
+
 // 导出一个实例对象
 export default new RequestHttp(config)
- 

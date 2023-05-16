@@ -1,6 +1,6 @@
 /*
  * @Author: ljf@2054316
- * @Description: 
+ * @Description:
  * @Date: 2023-04-15 11:30:13
  * @LastEditTime: 2023-04-18 23:26:34
  * @FilePath: \PPTCopilot\src\hooks\useSlide2Dom.ts
@@ -8,7 +8,7 @@
 import { Slide, PPTTextElement} from '@/types/slides'
 
 export default () => {
-  const convert_slide_to_dom = (slide: Slide, root_name = 'slide') => {
+  const convert_slide_to_dom = (slide: Slide, root_name = 'section') => {
     // 功能：输入一页slide，提取有效信息为dom结构并返回
     // 说明：现只支持对text的提取。暂未保证顺序从上到下、从左到右 TODO
     // 返回值：dom结构，在顶层进行解析
@@ -30,7 +30,7 @@ export default () => {
         const my_Element_dom = document.createElement('p')
 
         const top_Element_dom = parser.parseFromString(textElement.content, 'application/xml')
-        
+
         my_Element_dom.setAttribute('id', textElement.id)
         my_Element_dom.textContent = top_Element_dom.documentElement.textContent
 
@@ -40,7 +40,7 @@ export default () => {
         // top_Element_dom.documentElement.setAttribute('height', textElement.height.toString())
         // top_Element_dom.documentElement.setAttribute('rotate', textElement.rotate.toString())
 
-        
+
         const text = top_Element_dom.textContent
         // console.log(top_Element_dom.documentElement.textContent)
 
@@ -58,7 +58,7 @@ export default () => {
     // 功能：将选中张幻灯片转换为dom
     // 说明：调用convert_slide_to_dom。目前，外部只调用convert_slides_to_dom
     // 返回值：dom结构，在顶层进行解析
-    
+
     const top_dom = document.createElement(root_name)
     for (let i = 0; i < slides.length; i++) {
       const page = convert_slide_to_dom(slides[i])
@@ -68,6 +68,7 @@ export default () => {
   }
 
   return {
+    convert_slide_to_dom,
     convert_slides_to_dom
   }
 

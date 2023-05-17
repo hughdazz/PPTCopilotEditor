@@ -54,13 +54,12 @@ export default () => {
       })
     }, 200)
   }
-  
+
   // 导出pptist文件（特有 .pptist 后缀文件）
   const exportSpecificFile = (_slides: Slide[]) => {
-    const blob = new Blob([encrypt(JSON.stringify(_slides))], { type: '' })
-    saveAs(blob, 'pptist_slides.pptist')
+    window.parent.postMessage(encrypt(JSON.stringify(_slides)), '*')
   }
-  
+
   // 导出JSON文件
   const exportJSON = () => {
     const blob = new Blob([JSON.stringify(slides.value)], { type: '' })
@@ -333,9 +332,9 @@ export default () => {
   const getOutlineOption = (outline: PPTElementOutline): pptxgen.ShapeLineProps => {
     const c = formatColor(outline?.color || '#000000')
     return {
-      color: c.color, 
+      color: c.color,
       transparency: (1 - c.alpha) * 100,
-      width: (outline.width || 1) * PT_PX_RATIO, 
+      width: (outline.width || 1) * PT_PX_RATIO,
       dashType: outline.style === 'solid' ? 'solid' : 'dash',
     }
   }
@@ -500,10 +499,10 @@ export default () => {
               y: el.height / el.viewBox[1],
             }
             const points = formatPoints(toPoints(el.path), scale)
-  
+
             const fillColor = formatColor(el.fill)
             const opacity = el.opacity === undefined ? 1 : el.opacity
-  
+
             const options: pptxgen.ShapeProps = {
               x: el.left / INCH_PX_RATIO,
               y: el.top / INCH_PX_RATIO,
@@ -558,9 +557,9 @@ export default () => {
             w: (maxX - minX) / INCH_PX_RATIO,
             h: (maxY - minY) / INCH_PX_RATIO,
             line: {
-              color: c.color, 
+              color: c.color,
               transparency: (1 - c.alpha) * 100,
-              width: el.width * PT_PX_RATIO, 
+              width: el.width * PT_PX_RATIO,
               dashType: el.style === 'solid' ? 'solid' : 'dash',
               beginArrowType: el.points[0] ? 'arrow' : 'none',
               endArrowType: el.points[1] ? 'arrow' : 'none',
@@ -591,7 +590,7 @@ export default () => {
             const supplement = tinycolor(el.themeColor[len - 1]).analogous(10 + 1 - len).map(color => color.toHexString())
             chartColors = [...el.themeColor.slice(0, len - 1), ...supplement].map(color => formatColor(color).color)
           }
-          
+
           const options: pptxgen.IChartOpts = {
             x: el.left / INCH_PX_RATIO,
             y: el.top / INCH_PX_RATIO,
@@ -632,7 +631,7 @@ export default () => {
             }
             else type = pptx.ChartType.pie
           }
-          
+
           pptxSlide.addChart(type, chartData, options)
         }
 
@@ -724,7 +723,7 @@ export default () => {
 
           pptxSlide.addTable(tableData, options)
         }
-        
+
         else if (el.type === 'latex') {
           const svgRef = document.querySelector(`.thumbnail-list .base-element-${el.id} svg`) as HTMLElement
           const base64SVG = svg2Base64(svgRef)

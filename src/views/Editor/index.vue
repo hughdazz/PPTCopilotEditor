@@ -40,7 +40,7 @@
 <script lang="ts" setup>
 import {ref} from 'vue'
 import {storeToRefs} from 'pinia'
-import {useMainStore} from '@/store'
+import {useMainStore, useSlidesStore} from '@/store'
 import useGlobalHotkey from '@/hooks/useGlobalHotkey'
 import usePasteEvent from '@/hooks/usePasteEvent'
 
@@ -49,8 +49,6 @@ import Canvas from './Canvas/index.vue'
 import CanvasTool from './CanvasTool/index.vue'
 import Thumbnails from './Thumbnails/index.vue'
 import Toolbar from './Toolbar/index.vue'
-import Remark from './Remark/index.vue'
-import GptChat from './GptChat/index.vue'
 import ExportDialog from './ExportDialog/index.vue'
 import SelectPanel from './SelectPanel.vue'
 import {Modal} from 'ant-design-vue'
@@ -64,13 +62,26 @@ const remarkHeight = ref(40)
 
 useGlobalHotkey()
 usePasteEvent()
+import useImport from '@/hooks/useImport'
+const {importSpecificFile} = useImport()
 
+// 文件导入
 window.addEventListener('message', function(event) {
   // 检查消息来源
   if (event.origin !== 'http://localhost:9529') return
   // 输出或处理接收到的消息
-  const token: string = event.data
-  document.cookie = `token=${token};`
+  const data: string = event.data
+  const blob = new Blob([data], { type: '*' })
+  console.log('7777 length: ', data.length)
+  // 将 Blob 对象转换为 File 对象
+  const file = new File([blob], 'this.pptist')
+  // 创建 DataTransfer 对象
+  const dataTransfer = new DataTransfer()
+  // 将 File 对象添加到 DataTransfer 对象
+  dataTransfer.items.add(file)
+  // 从 DataTransfer 对象获取 FileList 对象
+  const fileList = dataTransfer.files
+  importSpecificFile(fileList, true)
 }, false)
 
 </script>

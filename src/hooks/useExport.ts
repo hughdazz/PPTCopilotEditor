@@ -55,9 +55,8 @@ export default () => {
     }, 200)
   }
 
-  // 导出pptist文件（特有 .pptist 后缀文件）
   const exportSpecificFile = (_slides: Slide[]) => {
-    window.parent.postMessage(encrypt(JSON.stringify(_slides)), '*')
+    window.parent.postMessage(JSON.stringify(_slides), '*')
   }
 
   // 导出JSON文件

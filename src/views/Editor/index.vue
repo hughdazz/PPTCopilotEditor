@@ -5,15 +5,19 @@
             <Thumbnails class="layout-content-left"/>
             <div class="layout-content-center">
                 <CanvasTool class="center-top"/>
-                <Canvas class="center-body" :style="{ height: `calc(100% - ${remarkHeight + 40}px)` }"/>
 
-                <div class="center-bottom">
-                    点击扩大
-                    <button @click="remarkHeight = 500">^</button>
-                    点击缩小
-                    <button @click="remarkHeight = 20">-</button>
-                    <ChatBox height="480"/>
-                </div>
+                <Canvas class="center-body animated-div" :style="{ height: `calc(100% - ${remarkHeight + 40}px)`, transition: 'height 0.5s ease' }"/>
+                <transition name="expand">
+                    <div v-if="!isExpanded" class="center-bottom expanded" ref="expandedDiv">
+                        点击扩大
+                        <button @click="expand">^</button>
+                    </div>
+                    <div v-else class="center-bottom shrunk" ref="shrunkDiv">
+                        点击缩小
+                        <button @click="shrink">-</button>
+                        <ChatBox height="480"/>
+                    </div>
+                </transition>
             </div>
 
             <Toolbar class="layout-content-right"/>
@@ -38,9 +42,9 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {ref, watch, nextTick} from 'vue'
 import {storeToRefs} from 'pinia'
-import {useMainStore} from '@/store'
+import {useMainStore, useSlidesStore} from '@/store'
 import useGlobalHotkey from '@/hooks/useGlobalHotkey'
 import usePasteEvent from '@/hooks/usePasteEvent'
 
@@ -49,33 +53,67 @@ import Canvas from './Canvas/index.vue'
 import CanvasTool from './CanvasTool/index.vue'
 import Thumbnails from './Thumbnails/index.vue'
 import Toolbar from './Toolbar/index.vue'
-import Remark from './Remark/index.vue'
-import GptChat from './GptChat/index.vue'
 import ExportDialog from './ExportDialog/index.vue'
 import SelectPanel from './SelectPanel.vue'
 import {Modal} from 'ant-design-vue'
 import ChatBox from '@/components/ChatBox.vue'
 
+import {ElLoading, ElMessageBox} from 'element-plus'
+import {Slide} from '@/types/slides'
+import useGenPPTByOutline from '@/hooks/useGenPPTByOutline'
+import RequestHttp from '@/utils/axiosRequest'
+import { guide_slide } from '@/api/ppt_Request_gpt'
+
 const mainStore = useMainStore()
 const {dialogForExport, showSelectPanel} = storeToRefs(mainStore)
 const closeExportDialog = () => mainStore.setDialogForExport('')
 
+const slidesStore = useSlidesStore()
+
 const remarkHeight = ref(40)
+const isExpanded = ref(false)
+
+const expand = async () => {
+  isExpanded.value = true
+  remarkHeight.value = 20
+  await nextTick()
+  remarkHeight.value = 500
+}
+const shrink = async () => {
+  isExpanded.value = false
+  remarkHeight.value = 500
+  await nextTick()
+  remarkHeight.value = 20
+}
 
 useGlobalHotkey()
 usePasteEvent()
+import useImport from '@/hooks/useImport'
+const {importSpecificFile} = useImport()
 
+// 文件导入
 window.addEventListener('message', function(event) {
   // 检查消息来源
   if (event.origin !== 'http://localhost:9529') return
   // 输出或处理接收到的消息
-  const token: string = event.data
-  document.cookie = `token=${token};`
+  const data: string = event.data
+  const blob = new Blob([data], { type: '*' })
+  console.log('7777 length: ', data.length)
+  // 将 Blob 对象转换为 File 对象
+  const file = new File([blob], 'this.pptist')
+  // 创建 DataTransfer 对象
+  const dataTransfer = new DataTransfer()
+  // 将 File 对象添加到 DataTransfer 对象
+  dataTransfer.items.add(file)
+  // 从 DataTransfer 对象获取 FileList 对象
+  const fileList = dataTransfer.files
+  importSpecificFile(fileList, true)
 }, false)
 
 </script>
 
 <style lang="scss" scoped>
+
 .pptist-editor {
   height: 100%;
 }

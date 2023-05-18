@@ -90,7 +90,7 @@ const slides_demo: Slide[] = [
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
         defaultColor: '#333',
-      }, 
+      },
       {
         type: 'text',
         id: 'mRHvQN',
@@ -102,7 +102,7 @@ const slides_demo: Slide[] = [
         rotate: 0,
         defaultFontName: 'Microsoft Yahei',
         defaultColor: '#333',
-      }, 
+      },
       {
         type: 'line',
         id: '7CQDwc',
@@ -114,7 +114,7 @@ const slides_demo: Slide[] = [
         color: '#5b9bd5',
         style: 'solid',
         width: 4
-      }, 
+      },
       {
         type: 'shape',
         id: '09wqWw',
@@ -149,7 +149,7 @@ const slides_demo: Slide[] = [
         fill: '#5b9bd5',
         fixedRatio: false,
         rotate: 0
-      }, 
+      },
       {
         type: 'shape',
         id: 'Mpwv7x',
@@ -163,7 +163,7 @@ const slides_demo: Slide[] = [
         fixedRatio: false,
         rotate: 0,
         opacity: 0.7
-      }, 
+      },
       {
         type: 'text',
         id: 'WQOTAp',
@@ -205,7 +205,7 @@ const readFile = (filePath: string) => {
 
 // 改这两个参数进行调试
 const choice_isdemo = false
-const template_json_path = './ppt_template/pptist_slides.json'
+const template_json_path = './ppt_template/base_template.json'
 
 export const slides: Slide[] = choice_isdemo ? slides_demo : JSON.parse(readFile(template_json_path))
 

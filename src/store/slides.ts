@@ -9,7 +9,7 @@ import { update_slides, UpdateSlidesRequest } from '@/api/ppt_Request_gpt'
 import useSlide2Dom from '@/hooks/useSlide2Dom'
 import useXml2Slide from '@/hooks/useXml2Slide'
 
-const { convert_slides_to_dom } = useSlide2Dom()
+const { convert_slide_to_dom, convert_slides_to_dom } = useSlide2Dom()
 const { update_xml_to_dom_to_slide } = useXml2Slide()
 
 interface RemoveElementPropData {
@@ -46,7 +46,7 @@ export const useSlidesStore = defineStore('slides', {
     currentSlide(state) {
       return state.slides[state.slideIndex]
     },
-  
+
     currentSlideAnimations(state) {
       const currentSlide = state.slides[state.slideIndex]
       if (!currentSlide?.animations) return []
@@ -87,7 +87,7 @@ export const useSlidesStore = defineStore('slides', {
       }
       return formatedAnimations
     },
-  
+
     layouts(state) {
       const {
         themeColor,
@@ -95,16 +95,16 @@ export const useSlidesStore = defineStore('slides', {
         fontName,
         backgroundColor,
       } = state.theme
-  
+
       const subColor = tinycolor(fontColor).isDark() ? 'rgba(230, 230, 230, 0.5)' : 'rgba(180, 180, 180, 0.5)'
-  
+
       const layoutsString = JSON.stringify(layouts)
         .replaceAll('{{themeColor}}', themeColor)
         .replaceAll('{{fontColor}}', fontColor)
         .replaceAll('{{fontName}}', fontName)
         .replaceAll('{{backgroundColor}}', backgroundColor)
         .replaceAll('{{subColor}}', subColor)
-      
+
       return JSON.parse(layoutsString)
     },
   },
@@ -113,48 +113,48 @@ export const useSlidesStore = defineStore('slides', {
     setTheme(themeProps: Partial<SlideTheme>) {
       this.theme = { ...this.theme, ...themeProps }
     },
-  
+
     setViewportRatio(viewportRatio: number) {
       this.viewportRatio = viewportRatio
     },
-  
+
     setSlides(slides: Slide[]) {
       this.slides = slides
     },
-  
+
     addSlide(slide: Slide | Slide[]) {
       const slides = Array.isArray(slide) ? slide : [slide]
       const addIndex = this.slideIndex + 1
       this.slides.splice(addIndex, 0, ...slides)
       this.slideIndex = addIndex
     },
-  
+
     updateSlide(props: Partial<Slide>) {
       const slideIndex = this.slideIndex
       this.slides[slideIndex] = { ...this.slides[slideIndex], ...props }
     },
-  
+
     deleteSlide(slideId: string | string[]) {
       const slidesId = Array.isArray(slideId) ? slideId : [slideId]
-  
+
       const deleteSlidesIndex = []
       for (let i = 0; i < slidesId.length; i++) {
         const index = this.slides.findIndex(item => item.id === slidesId[i])
         deleteSlidesIndex.push(index)
       }
       let newIndex = Math.min(...deleteSlidesIndex)
-  
+
       const maxIndex = this.slides.length - slidesId.length - 1
       if (newIndex > maxIndex) newIndex = maxIndex
-  
+
       this.slideIndex = newIndex
       this.slides = this.slides.filter(item => !slidesId.includes(item.id))
     },
-  
+
     updateSlideIndex(index: number) {
       this.slideIndex = index
     },
-  
+
     addElement(element: PPTElement | PPTElement[]) {
       const elements = Array.isArray(element) ? element : [element]
       const currentSlideEls = this.slides[this.slideIndex].elements
@@ -168,11 +168,11 @@ export const useSlidesStore = defineStore('slides', {
       const newEls = currentSlideEls.filter(item => !elementIdList.includes(item.id))
       this.slides[this.slideIndex].elements = newEls
     },
-  
+
     updateElement(data: UpdateElementData) {
       const { id, props } = data
       const elIdList = typeof id === 'string' ? [id] : id
-  
+
       const slideIndex = this.slideIndex
       const slide = this.slides[slideIndex]
       const elements = slide.elements.map(el => {
@@ -180,11 +180,11 @@ export const useSlidesStore = defineStore('slides', {
       })
       this.slides[slideIndex].elements = (elements as PPTElement[])
     },
-  
+
     removeElementProps(data: RemoveElementPropData) {
       const { id, propName } = data
       const propsNames = typeof propName === 'string' ? [propName] : propName
-  
+
       const slideIndex = this.slideIndex
       const slide = this.slides[slideIndex]
       const elements = slide.elements.map(el => {
@@ -193,6 +193,7 @@ export const useSlidesStore = defineStore('slides', {
       this.slides[slideIndex].elements = (elements as PPTElement[])
     },
 
+
     request_update_slides(prompt: string): void {
       const update_slides_requset: UpdateSlidesRequest = {
         'prompt': '',
@@ -200,9 +201,10 @@ export const useSlidesStore = defineStore('slides', {
       }
       update_slides_requset['prompt'] = prompt
 
-      const target_slides = [this.slides[this.slideIndex]]
+      const target_slides = this.slides[this.slideIndex]
 
-      const dom_top = convert_slides_to_dom(target_slides)
+      // const dom_top = convert_slides_to_dom(target_slides)
+      const dom_top = convert_slide_to_dom(target_slides)
       update_slides_requset['ppt_xml'] = dom_top.outerHTML
 
       let receive_xml = `
@@ -213,7 +215,8 @@ export const useSlidesStore = defineStore('slides', {
   </slide>
 </slides>
 `
-      // console.log(update_slides_requset['ppt_xml'])
+      console.log('要修改的页面和命令：')
+      console.log(JSON.stringify(update_slides_requset, null, 2))
 
       // const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
       // for (let i = 0; i < res_slides.length; i++) {
@@ -223,10 +226,10 @@ export const useSlidesStore = defineStore('slides', {
 
       update_slides(update_slides_requset).then((response) => {
         console.log('response:', JSON.stringify(response, null, 2))
-        const data = response.data 
+        const data = response.data
         if (data) {
           receive_xml = data['xml_ppt']
-          const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
+          const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
           // for (let i = 0; i < res_slides.length; i++) {
           //   target_slides[i] = res_slides[i]
           // }

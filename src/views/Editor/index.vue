@@ -89,6 +89,7 @@ const shrink = async () => {
 useGlobalHotkey()
 usePasteEvent()
 import useImport from '@/hooks/useImport'
+import {encrypt} from '@/utils/crypto'
 const {importSpecificFile} = useImport()
 
 // 文件导入
@@ -96,11 +97,12 @@ window.addEventListener('message', function(event) {
   // 检查消息来源
   if (event.origin !== 'http://localhost:9529') return
   // 输出或处理接收到的消息
-  const data: string = event.data
-  const blob = new Blob([data], { type: '*' })
+  const data: string = event.data // 虽然定义成string，实际会被自动转为json obj
+  console.log(typeof data)
+  const blob = new Blob([encrypt(JSON.stringify(data))], { type: '*' })
   console.log('7777 length: ', data.length)
   // 将 Blob 对象转换为 File 对象
-  const file = new File([blob], 'this.pptist')
+  const file = new File([blob], 'test.json')
   // 创建 DataTransfer 对象
   const dataTransfer = new DataTransfer()
   // 将 File 对象添加到 DataTransfer 对象

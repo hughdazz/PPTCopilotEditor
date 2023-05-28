@@ -24,11 +24,11 @@
         />
       </div>
       <div class="tip">
-        提示：.pptist 是本应用的特有文件后缀，支持将该类型的文件导入回应用中。
+        将修改内容保存到云端
       </div>
     </div>
     <div class="btns">
-      <Button class="btn export" type="primary" @click="exportSpecificFile(selectedSlides)">导出 .pptist 文件</Button>
+      <Button class="btn export" type="primary" @click="saveToCloud(selectedSlides)">保存到云端</Button>
       <Button class="btn close" @click="emit('close')">关闭</Button>
     </div>
   </div>
@@ -53,7 +53,7 @@ const emit = defineEmits<{
 
 const { slides, currentSlide } = storeToRefs(useSlidesStore())
 
-const { exportSpecificFile } = useExport()
+const { saveToCloud } = useExport()
 
 const rangeType = ref<'all' | 'current' | 'custom'>('all')
 const range = ref<[number, number]>([1, slides.value.length])

@@ -4,17 +4,16 @@
             <Dropdown :trigger="['click']">
                 <div class="menu-item">
                     <IconFolderClose/>
-                    <span class="text">文件</span></div>
+                    <span class="text">文件导入</span></div>
                 <template #overlay>
                     <Menu>
                         <FileInput accept=".pptist" @change="files => importSpecificFile(files)">
-                            <MenuItem>导入 pptist 文件</MenuItem>
+                            <MenuItem>插入 pptist 文件</MenuItem>
                         </FileInput>
                         <FileInput accept="application/vnd.openxmlformats-officedocument.presentationml.presentation"
                                    @change="files => importPPTXFile(files)">
-                            <MenuItem>导入 pptx 文件（demo）</MenuItem>
+                            <MenuItem>插入 pptx 文件（demo）</MenuItem>
                         </FileInput>
-                        <MenuItem @click="setDialogForExport('pptx')">导出文件</MenuItem>
                     </Menu>
                 </template>
             </Dropdown>
@@ -67,7 +66,7 @@
 
         <div class="right">
             <Tooltip :mouseLeaveDelay="0" title="导出">
-                <div class="menu-item" @click="setDialogForExport('pptx')">
+                <div class="menu-item" @click="setDialogForExport('save2cloud')">
                     <IconShare size="18" fill="#666"/>
                 </div>
             </Tooltip>

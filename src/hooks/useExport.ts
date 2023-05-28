@@ -55,7 +55,7 @@ export default () => {
     }, 200)
   }
 
-  const exportSpecificFile = (_slides: Slide[]) => {
+  const saveToCloud = (_slides: Slide[]) => {
     window.parent.postMessage(JSON.stringify(_slides), '*')
   }
 
@@ -756,7 +756,7 @@ export default () => {
     exporting,
     exportImage,
     exportJSON,
-    exportSpecificFile,
+    saveToCloud,
     exportPPTX,
   }
 }

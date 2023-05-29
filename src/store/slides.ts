@@ -197,7 +197,7 @@ export const useSlidesStore = defineStore('slides', {
     request_update_slides(prompt: string): void {
       const update_slides_requset: UpdateSlidesRequest = {
         'prompt': '',
-        'ppt_xml': '',
+        'slide': '',
       }
       update_slides_requset['prompt'] = prompt
 
@@ -205,7 +205,7 @@ export const useSlidesStore = defineStore('slides', {
 
       // const dom_top = convert_slides_to_dom(target_slides)
       const dom_top = convert_slide_to_dom(target_slides)
-      update_slides_requset['ppt_xml'] = dom_top.outerHTML
+      update_slides_requset['slide'] = dom_top.outerHTML
 
       let receive_xml = `
       <slides>

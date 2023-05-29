@@ -1,10 +1,10 @@
-FROM node:latest
+FROM node:16
 
 WORKDIR /home/app
 
 COPY . .
 
-RUN npm config set registry https://registry.npm.taobao.org && npm install
+RUN npm install
 
 EXPOSE 7777
 

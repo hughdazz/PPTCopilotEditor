@@ -2,7 +2,7 @@ import axios from '@/utils/axiosRequest'
 
 export interface UpdateSlidesRequest {
   'prompt': string,
-  'ppt_xml': string,
+  'slide': string,
 }
 
 export const update_slides = (params: UpdateSlidesRequest) => {

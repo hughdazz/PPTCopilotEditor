@@ -63,6 +63,11 @@ import {Slide} from '@/types/slides'
 import useGenPPTByOutline from '@/hooks/useGenPPTByOutline'
 import RequestHttp from '@/utils/axiosRequest'
 import { guide_slide } from '@/api/ppt_Request_gpt'
+const loadingInstance0 = ElLoading.service({
+  text: '正在启动PPT编辑系统...',
+  spinner: 'el-icon-loading',
+  background: 'rgba(0, 0, 0, 0.3)'
+})
 
 const mainStore = useMainStore()
 const {dialogForExport, showSelectPanel} = storeToRefs(mainStore)
@@ -91,7 +96,7 @@ usePasteEvent()
 import useImport from '@/hooks/useImport'
 import {encrypt} from '@/utils/crypto'
 const {importSpecificFile} = useImport()
-
+loadingInstance0.close()
 // 文件导入
 window.addEventListener('message', function(event) {
   // 检查消息来源

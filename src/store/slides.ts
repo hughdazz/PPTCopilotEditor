@@ -217,11 +217,21 @@ export const useSlidesStore = defineStore('slides', {
       // const receive_xml = `<section id=\\"yH_-FXmhGU\\"><p id=\\"tEyqPBBaml\\">我为什么玩明日方舟11</p><p id=\\"VCguVf4l1B\\">汇报人：dhf11</p></section>`
       // const receive_xml = `<section id="yH_-FXmhGU"><p id="tEyqPBBaml">我为什么玩明日方舟11</p><p id="VCguVf4l1B">汇报人：dhf11</p></section>`
 
-      let receive_xml = `<section id=\\"01JPyG4vNc\\"><p id=\\"a3DqEl_Pz8\\">有道是：知之者不如好之者，好之者不如乐之者。–孔子</p><p id=\\"Y8pCsHZiKJ\\">我希望未来成为一名成功的软件工程师，具有以下目标和计划:</p><p id=\\"UeffRV8G4Q\\">1.学习新的编程语言和技术，不断提高自己的技能水平</p><p id=\\"1K_Af9ASgy\\">2.参与开源项目或自己开发一些有用的工具，积累经验</p></section>`
+      let receive_xml = `123123<section id=\\"01JPyG4vNc\\"><p id=\\"a3DqEl_Pz8\\">有道是：知之者不如好之者，好之者不如乐之者。–孔子</p><p id=\\"Y8pCsHZiKJ\\">我希望未来成为一名成功的软件工程师，具有以下目标和计划:</p><p id=\\"UeffRV8G4Q\\">1.学习新的编程语言和技术，不断提高自己的技能水平</p><p id=\\"1K_Af9ASgy\\">2.参与开源项目或自己开发一些有用的工具，积累经验</p></section>1312asd `
 
       // 将 receive_xml 中的 \ 和 \\ 全部替换成空格
-      // receive_xml = receive_xml.replace(/\\/g, '')
+      receive_xml = receive_xml.replace(/\\/g, '')
 
+      // [\s\S]*? 用于匹配 <section> 和 </section> 之间的任何字符，包括换行符
+      const pattern = /<section[\s\S]*?<\/section>/
+      const match = receive_xml.match(pattern)
+      if (match) {
+        console.log('res_raw:\n', JSON.stringify(receive_xml, null, 2))
+        receive_xml = match[0]
+      }
+      else {
+        console.log('No match found')
+      }
       const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
       for (let i = 0; i < res_slides.length; i++) {
         target_slides[i] = res_slides[i]

@@ -101,10 +101,11 @@ loadingInstance0.close()
 window.addEventListener('message', function(event) {
   // 检查消息来源
   if (event.origin !== 'http://123.249.70.216:9529') return
-  const loadingInstance1 = ElLoading.service({
-    text: '正在导入PPT文件...',
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: '正在导入...',
     spinner: 'el-icon-loading',
-    background: 'rgba(0, 0, 0, 0.3)'
+    background: 'rgba(0, 0, 0, 0.7)'
   })
   // 输出或处理接收到的消息
   const data: string = event.data // 虽然定义成string，实际会被自动转为json obj
@@ -120,7 +121,7 @@ window.addEventListener('message', function(event) {
   // 从 DataTransfer 对象获取 FileList 对象
   const fileList = dataTransfer.files
   importSpecificFile(fileList, true)
-  loadingInstance1.close()
+  loadingInstance.close()
 }, false)
 
 </script>

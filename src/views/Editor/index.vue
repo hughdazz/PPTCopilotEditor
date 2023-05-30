@@ -95,7 +95,13 @@ const {importSpecificFile} = useImport()
 // 文件导入
 window.addEventListener('message', function(event) {
   // 检查消息来源
-  if (event.origin !== 'http://localhost:9529') return
+  if (event.origin !== 'http://123.249.70.216:9529') return
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: '正在导入...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(0, 0, 0, 0.7)'
+  })
   // 输出或处理接收到的消息
   const data: string = event.data // 虽然定义成string，实际会被自动转为json obj
   console.log(typeof data)
@@ -110,6 +116,7 @@ window.addEventListener('message', function(event) {
   // 从 DataTransfer 对象获取 FileList 对象
   const fileList = dataTransfer.files
   importSpecificFile(fileList, true)
+  loadingInstance.close()
 }, false)
 
 </script>

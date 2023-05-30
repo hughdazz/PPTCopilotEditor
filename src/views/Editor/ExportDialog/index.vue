@@ -1,10 +1,10 @@
 <template>
   <div class="export-dialog">
     <div class="tabs">
-      <div 
-        class="tab" 
+      <div
+        class="tab"
         :class="{ 'active': tab.key === dialogForExport }"
-        v-for="tab in tabs" 
+        v-for="tab in tabs"
         :key="tab.key"
         @click="setDialogForExport(tab.key)"
       >{{tab.label}}</div>
@@ -25,7 +25,7 @@ import ExportImage from './ExportImage.vue'
 import ExportJSON from './ExportJSON.vue'
 import ExportPDF from './ExportPDF.vue'
 import ExportPPTX from './ExportPPTX.vue'
-import ExportSpecificFile from './ExportSpecificFile.vue'
+import SaveToCloud from './ExportSpecificFile.vue'
 
 interface TabItem {
   key: DialogForExportTypes
@@ -38,7 +38,7 @@ const { dialogForExport } = storeToRefs(mainStore)
 const setDialogForExport = mainStore.setDialogForExport
 
 const tabs: TabItem[] = [
-  { key: 'pptist', label: '导出 pptist 文件' },
+  { key: 'save2cloud', label: '保存到云端' },
   { key: 'pptx', label: '导出 PPTX' },
   { key: 'image', label: '导出图片' },
   { key: 'json', label: '导出 JSON' },
@@ -51,7 +51,7 @@ const currentDialogComponent = computed(() => {
     'json': ExportJSON,
     'pdf': ExportPDF,
     'pptx': ExportPPTX,
-    'pptist': ExportSpecificFile,
+    'save2cloud': SaveToCloud,
   }
   return dialogMap[dialogForExport.value] || null
 })

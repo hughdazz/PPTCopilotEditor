@@ -63,6 +63,11 @@ import {Slide} from '@/types/slides'
 import useGenPPTByOutline from '@/hooks/useGenPPTByOutline'
 import RequestHttp from '@/utils/axiosRequest'
 import { guide_slide } from '@/api/ppt_Request_gpt'
+const loadingInstance0 = ElLoading.service({
+  text: '正在启动PPT编辑系统...',
+  spinner: 'el-icon-loading',
+  background: 'rgba(0, 0, 0, 0.3)'
+})
 
 const mainStore = useMainStore()
 const {dialogForExport, showSelectPanel} = storeToRefs(mainStore)
@@ -91,11 +96,16 @@ usePasteEvent()
 import useImport from '@/hooks/useImport'
 import {encrypt} from '@/utils/crypto'
 const {importSpecificFile} = useImport()
-
+loadingInstance0.close()
 // 文件导入
 window.addEventListener('message', function(event) {
   // 检查消息来源
   if (event.origin !== 'http://123.249.70.216:9529') return
+  const loadingInstance1 = ElLoading.service({
+    text: '正在导入PPT文件...',
+    spinner: 'el-icon-loading',
+    background: 'rgba(0, 0, 0, 0.3)'
+  })
   // 输出或处理接收到的消息
   const data: string = event.data // 虽然定义成string，实际会被自动转为json obj
   console.log(typeof data)
@@ -110,6 +120,7 @@ window.addEventListener('message', function(event) {
   // 从 DataTransfer 对象获取 FileList 对象
   const fileList = dataTransfer.files
   importSpecificFile(fileList, true)
+  loadingInstance1.close()
 }, false)
 
 </script>

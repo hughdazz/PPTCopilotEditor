@@ -9,11 +9,13 @@
                 <Canvas class="center-body animated-div" :style="{ height: `calc(100% - ${remarkHeight + 40}px)`, transition: 'height 0.5s ease' }"/>
                 <transition name="expand">
                     <div v-if="!isExpanded" class="center-bottom expanded" ref="expandedDiv">
-                        点击扩大
+                        召唤 Copilot
+                        <up-outlined />
                         <button @click="expand">^</button>
                     </div>
                     <div v-else class="center-bottom shrunk" ref="shrunkDiv">
-                        点击缩小
+                        返回
+                        <up-circle-outlined />
                         <button @click="shrink">-</button>
                         <ChatBox height="480"/>
                     </div>
@@ -57,6 +59,8 @@ import ExportDialog from './ExportDialog/index.vue'
 import SelectPanel from './SelectPanel.vue'
 import {Modal} from 'ant-design-vue'
 import ChatBox from '@/components/ChatBox.vue'
+
+import { UpCircleOutlined } from '@ant-design/icons-vue'
 
 import {ElLoading, ElMessageBox} from 'element-plus'
 import {Slide} from '@/types/slides'

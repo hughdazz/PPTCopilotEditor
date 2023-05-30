@@ -9,6 +9,7 @@
     "build:fonts": "node scripts/build-fonts"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "^6.1.0",
     "@icon-park/vue-next": "^1.4.2",
     "animate.css": "^4.1.1",
     "ant-design-vue": "^3.2.15",

@@ -30,7 +30,7 @@ export default () => {
     // 返回值：更新后的slides
 
     const parser = new DOMParser()
-    
+
     const top_dom = parser.parseFromString(xml, 'application/xml')
 
     const slides_all = cloneDeep(slides) // 深拷贝
@@ -41,7 +41,7 @@ export default () => {
     else {
       // console.log('XML 解析成功\n', xml)
 
-      top_dom.querySelectorAll('slide').forEach((slide) => {
+      top_dom.querySelectorAll('section').forEach((slide) => {
         // console.log(slide)
         const slide_id = slide.getAttribute('id')
         // 找到内存中对应id的幻灯片

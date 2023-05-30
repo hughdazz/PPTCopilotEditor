@@ -195,49 +195,52 @@ export const useSlidesStore = defineStore('slides', {
 
 
     request_update_slides(prompt: string): void {
+      // console.log(1)
+
       const update_slides_requset: UpdateSlidesRequest = {
         'prompt': '',
-        'ppt_xml': '',
+        'slide': '',
       }
       update_slides_requset['prompt'] = prompt
 
       const target_slides = this.slides[this.slideIndex]
 
-      // const dom_top = convert_slides_to_dom(target_slides)
       const dom_top = convert_slide_to_dom(target_slides)
-      update_slides_requset['ppt_xml'] = dom_top.outerHTML
+      update_slides_requset['slide'] = dom_top.outerHTML
 
-      let receive_xml = `
-      <slides>
-  <slide id="test-slide-1">
-    <p id="idn7Mx">论语</p>
-    <p id="7stmVP">有朋自远方来，不亦乐乎。</p>
-  </slide>
-</slides>
-`
+      console.log(update_slides_requset['slide'])
+
       console.log('要修改的页面和命令：')
       console.log(JSON.stringify(update_slides_requset, null, 2))
 
-      // const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
-      // for (let i = 0; i < res_slides.length; i++) {
-      //   target_slides[i] = res_slides[i]
-      // }
-      // this.slides[this.slideIndex] = res_slides[0]
+      // const receive_xml = `<section id=\\"cover\\"><p id=\\"tEyqPBBaml\\">我为什么玩明日方舟11</p><p id=\\"VCguVf4l1B\\">汇报人：dhf11</p></section>`
+      // const receive_xml = `<section id=\\"yH_-FXmhGU\\"><p id=\\"tEyqPBBaml\\">我为什么玩明日方舟11</p><p id=\\"VCguVf4l1B\\">汇报人：dhf11</p></section>`
+      const receive_xml = `<section id="yH_-FXmhGU"><p id="tEyqPBBaml">我为什么玩明日方舟11</p><p id="VCguVf4l1B">汇报人：dhf11</p></section>`
 
-      update_slides(update_slides_requset).then((response) => {
-        console.log('response:', JSON.stringify(response, null, 2))
-        const data = response.data
-        if (data) {
-          receive_xml = data['xml_ppt']
-          const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
-          // for (let i = 0; i < res_slides.length; i++) {
-          //   target_slides[i] = res_slides[i]
-          // }
-          this.slides[this.slideIndex] = res_slides[0]
-        }
-      }).catch(error => {
-        console.error('An error occurred:', error)
-      })
+      const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
+      for (let i = 0; i < res_slides.length; i++) {
+        target_slides[i] = res_slides[i]
+      }
+      console.log('原来的的页面：\n', JSON.stringify(this.slides[this.slideIndex], null, 2))
+
+      this.slides[this.slideIndex] = res_slides[0]
+
+      console.log('res:\n', JSON.stringify(res_slides[0], null, 2))
+
+      // update_slides(update_slides_requset).then((response) => {
+      //   console.log('response:', JSON.stringify(response, null, 2))
+      //   const data = response.data
+      //   if (data) {
+      //     receive_xml = data
+      //     const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
+      //     // for (let i = 0; i < res_slides.length; i++) {
+      //     //   target_slides[i] = res_slides[i]
+      //     // }
+      //     this.slides[this.slideIndex] = res_slides[0]
+      //   }
+      // }).catch(error => {
+      //   console.error('An error occurred:', error)
+      // })
 
     },
 

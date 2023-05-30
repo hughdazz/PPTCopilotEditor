@@ -82,7 +82,7 @@ export default () => {
     for (const item of SHAPE_LIST) {
       shapeList.push(...item.children)
     }
-    
+
     const reader = new FileReader()
     reader.onload = async e => {
       const json = await parse(e.target!.result as ArrayBuffer)
@@ -120,7 +120,7 @@ export default () => {
             el.height = el.height * scale
             el.left = el.left * scale
             el.top = el.top * scale
-  
+
             if (el.type === 'text') {
               slide.elements.push({
                 type: 'text',
@@ -162,7 +162,7 @@ export default () => {
               }
               else {
                 const shape = shapeList.find(item => item.pptxShapeType === el.shapType)
-                
+
                 const element: PPTShapeElement = {
                   type: 'shape',
                   id: nanoid(10),
@@ -187,15 +187,15 @@ export default () => {
                     align: 'middle',
                   }
                 }
-    
+
                 if (shape) {
                   element.path = shape.path
                   element.viewBox = shape.viewBox
-    
+
                   if (shape.pathFormula) {
                     element.pathFormula = shape.pathFormula
                     element.viewBox = [el.width, el.height]
-    
+
                     const pathFormula = SHAPE_PATH_FORMULAS[shape.pathFormula]
                     if ('editable' in pathFormula) {
                       element.path = pathFormula.formula(el.width, el.height, pathFormula.defaultValue)
@@ -204,14 +204,14 @@ export default () => {
                     else element.path = pathFormula.formula(el.width, el.height)
                   }
                 }
-    
+
                 slide.elements.push(element)
               }
             }
             else if (el.type === 'table') {
               const row = el.data.length
               const col = el.data[0].length
-  
+
               const style: TableCellStyle = {
                 fontname: theme.value.fontName,
                 color: theme.value.fontColor,
@@ -231,9 +231,9 @@ export default () => {
                 }
                 data.push(rowCells)
               }
-  
+
               const colWidths: number[] = new Array(col).fill(1 / col)
-  
+
               slide.elements.push({
                 type: 'table',
                 id: nanoid(10),
@@ -263,7 +263,7 @@ export default () => {
               let labels: string[]
               let legends: string[]
               let series: number[][]
-  
+
               if (el.chartType === 'scatterChart') {
                 labels = el.data[0].map(item => item + '')
                 legends = ['系列1']
@@ -274,9 +274,9 @@ export default () => {
                 legends = el.data.map(item => item.key)
                 series = el.data.map(item => item.values.map(v => v.y))
               }
-  
+
               let options: ChartOptions = {}
-  
+
               let chartType: ChartType = 'bar'
               if (el.chartType === 'barChart') {
                 chartType = 'bar'
@@ -299,7 +299,7 @@ export default () => {
               else if (el.chartType === 'pieChart' || el.chartType === 'pie3DChart') {
                 chartType = 'pie'
               }
-  
+
               slide.elements.push({
                 type: 'chart',
                 id: nanoid(10),

@@ -229,6 +229,19 @@ export const useSlidesStore = defineStore('slides', {
         const data = response.data
         if (data) {
           receive_xml = data['xml_ppt']
+          // 将 receive_xml 中所有的 \ 和 \\ 替换为 空串
+          receive_xml = receive_xml.replace(/\\/g, '')
+
+          // [\s\S]*? 用于匹配 <section> 和 </section> 之间的任何字符，包括换行符
+          const pattern = /<section[\s\S]*?<\/section>/
+          const match = receive_xml.match(pattern)
+          if (match) {
+            receive_xml = match[0]
+          }
+          else {
+            console.log('No match found')
+          }
+
           const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
           // for (let i = 0; i < res_slides.length; i++) {
           //   target_slides[i] = res_slides[i]

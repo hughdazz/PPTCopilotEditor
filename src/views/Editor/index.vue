@@ -9,11 +9,13 @@
                 <Canvas class="center-body animated-div" :style="{ height: `calc(100% - ${remarkHeight + 40}px)`, transition: 'height 0.5s ease' }"/>
                 <transition name="expand">
                     <div v-if="!isExpanded" class="center-bottom expanded" ref="expandedDiv">
-                        点击扩大
+                        召唤 Copilot
+                        <up-outlined />
                         <button @click="expand">^</button>
                     </div>
                     <div v-else class="center-bottom shrunk" ref="shrunkDiv">
-                        点击缩小
+                        返回
+                        <up-circle-outlined />
                         <button @click="shrink">-</button>
                         <ChatBox height="480"/>
                     </div>
@@ -58,6 +60,8 @@ import SelectPanel from './SelectPanel.vue'
 import {Modal} from 'ant-design-vue'
 import ChatBox from '@/components/ChatBox.vue'
 
+import { UpCircleOutlined } from '@ant-design/icons-vue'
+
 import {ElLoading, ElMessageBox} from 'element-plus'
 import {Slide} from '@/types/slides'
 import useGenPPTByOutline from '@/hooks/useGenPPTByOutline'
@@ -101,10 +105,11 @@ loadingInstance0.close()
 window.addEventListener('message', function(event) {
   // 检查消息来源
   if (event.origin !== 'http://123.249.70.216:9529') return
-  const loadingInstance1 = ElLoading.service({
-    text: '正在导入PPT文件...',
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: '正在导入...',
     spinner: 'el-icon-loading',
-    background: 'rgba(0, 0, 0, 0.3)'
+    background: 'rgba(0, 0, 0, 0.7)'
   })
   // 输出或处理接收到的消息
   const data: string = event.data // 虽然定义成string，实际会被自动转为json obj
@@ -120,7 +125,7 @@ window.addEventListener('message', function(event) {
   // 从 DataTransfer 对象获取 FileList 对象
   const fileList = dataTransfer.files
   importSpecificFile(fileList, true)
-  loadingInstance1.close()
+  loadingInstance.close()
 }, false)
 
 </script>

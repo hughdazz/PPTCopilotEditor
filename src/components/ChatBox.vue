@@ -38,7 +38,7 @@ export default defineComponent({
     const slidesStore = useSlidesStore()
     const {currentSlide} = storeToRefs(slidesStore)
 
-    slidesStore.request_update_slides('请帮我把这个ppt修改为论语主题')
+    // slidesStore.request_update_slides('请帮我把这个ppt修改为论语主题')
 
     const submitMessage = () => {
       if (message.value) {

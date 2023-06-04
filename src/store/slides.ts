@@ -195,8 +195,6 @@ export const useSlidesStore = defineStore('slides', {
 
 
     request_update_slides(prompt: string): void {
-      // console.log(1)
-
       const update_slides_requset: UpdateSlidesRequest = {
         'prompt': '',
         'slide': '',
@@ -205,57 +203,54 @@ export const useSlidesStore = defineStore('slides', {
 
       const target_slides = this.slides[this.slideIndex]
 
+      // const dom_top = convert_slides_to_dom(target_slides)
       const dom_top = convert_slide_to_dom(target_slides)
       update_slides_requset['slide'] = dom_top.outerHTML
 
-      console.log(update_slides_requset['slide'])
-
+      let receive_xml = `
+      <slides>
+  <slide id="test-slide-1">
+    <p id="idn7Mx">论语</p>
+    <p id="7stmVP">有朋自远方来，不亦乐乎。</p>
+  </slide>
+</slides>
+`
       console.log('要修改的页面和命令：')
       console.log(JSON.stringify(update_slides_requset, null, 2))
 
-      // const receive_xml = `<section id=\\"cover\\"><p id=\\"tEyqPBBaml\\">我为什么玩明日方舟11</p><p id=\\"VCguVf4l1B\\">汇报人：dhf11</p></section>`
-      // const receive_xml = `<section id=\\"yH_-FXmhGU\\"><p id=\\"tEyqPBBaml\\">我为什么玩明日方舟11</p><p id=\\"VCguVf4l1B\\">汇报人：dhf11</p></section>`
-      // const receive_xml = `<section id="yH_-FXmhGU"><p id="tEyqPBBaml">我为什么玩明日方舟11</p><p id="VCguVf4l1B">汇报人：dhf11</p></section>`
+      // const res_slides = update_xml_to_dom_to_slide(receive_xml, target_slides)
+      // for (let i = 0; i < res_slides.length; i++) {
+      //   target_slides[i] = res_slides[i]
+      // }
+      // this.slides[this.slideIndex] = res_slides[0]
 
-      let receive_xml = `123123<section id=\\"01JPyG4vNc\\"><p id=\\"a3DqEl_Pz8\\">有道是：知之者不如好之者，好之者不如乐之者。–孔子</p><p id=\\"Y8pCsHZiKJ\\">我希望未来成为一名成功的软件工程师，具有以下目标和计划:</p><p id=\\"UeffRV8G4Q\\">1.学习新的编程语言和技术，不断提高自己的技能水平</p><p id=\\"1K_Af9ASgy\\">2.参与开源项目或自己开发一些有用的工具，积累经验</p></section>1312asd `
+      update_slides(update_slides_requset).then((response) => {
+        console.log('response:', JSON.stringify(response, null, 2))
+        const data = response.data
+        if (data) {
+          receive_xml = data['xml_ppt']
+          // 将 receive_xml 中所有的 \ 和 \\ 替换为 空串
+          receive_xml = receive_xml.replace(/\\/g, '')
 
-      // 将 receive_xml 中的 \ 和 \\ 全部替换成空格
-      receive_xml = receive_xml.replace(/\\/g, '')
+          // [\s\S]*? 用于匹配 <section> 和 </section> 之间的任何字符，包括换行符
+          const pattern = /<section[\s\S]*?<\/section>/
+          const match = receive_xml.match(pattern)
+          if (match) {
+            receive_xml = match[0]
+          }
+          else {
+            console.log('No match found')
+          }
 
-      // [\s\S]*? 用于匹配 <section> 和 </section> 之间的任何字符，包括换行符
-      const pattern = /<section[\s\S]*?<\/section>/
-      const match = receive_xml.match(pattern)
-      if (match) {
-        console.log('res_raw:\n', JSON.stringify(receive_xml, null, 2))
-        receive_xml = match[0]
-      }
-      else {
-        console.log('No match found')
-      }
-      const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
-      for (let i = 0; i < res_slides.length; i++) {
-        target_slides[i] = res_slides[i]
-      }
-      // console.log('原来的的页面：\n', JSON.stringify(this.slides[this.slideIndex], null, 2))
-
-      this.slides[this.slideIndex] = res_slides[0]
-
-      console.log('res:\n', JSON.stringify(receive_xml, null, 2))
-
-      // update_slides(update_slides_requset).then((response) => {
-      //   console.log('response:', JSON.stringify(response, null, 2))
-      //   const data = response.data
-      //   if (data) {
-      //     receive_xml = data
-      //     const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
-      //     // for (let i = 0; i < res_slides.length; i++) {
-      //     //   target_slides[i] = res_slides[i]
-      //     // }
-      //     this.slides[this.slideIndex] = res_slides[0]
-      //   }
-      // }).catch(error => {
-      //   console.error('An error occurred:', error)
-      // })
+          const res_slides = update_xml_to_dom_to_slide(receive_xml, [target_slides])
+          // for (let i = 0; i < res_slides.length; i++) {
+          //   target_slides[i] = res_slides[i]
+          // }
+          this.slides[this.slideIndex] = res_slides[0]
+        }
+      }).catch(error => {
+        console.error('An error occurred:', error)
+      })
 
     },
 

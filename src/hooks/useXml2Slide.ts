@@ -42,12 +42,12 @@ export default () => {
       // console.log('XML 解析成功\n', xml)
 
       top_dom.querySelectorAll('section').forEach((slide) => {
-        // console.log(slide)
+        console.log('本次替换获取的slide是:', slide)
         const slide_id = slide.getAttribute('id')
         // 找到内存中对应id的幻灯片
         const slide_index = slides_all.findIndex((slide) => slide.id === slide_id)
         if (slide_index === -1) {
-          // console.error('未找到slide_id对应的slide')
+          console.error('未找到slide_id对应的slide')
         }
         else {
           const inner_slide = slides_all[slide_index]
@@ -63,7 +63,7 @@ export default () => {
               // 找到内存中的幻灯片中的对应id的元素
               const element_index = inner_slide.elements.findIndex((element) => element.id === element_id)
               if (element_index === -1) {
-                // console.error(`未找到element_id${element_id}对应的element`)
+                console.error(`未找到element_id=${element_id}对应的element`)
               }
               else {
                 const inner_textElement = inner_slide.elements[element_index] as PPTTextElement

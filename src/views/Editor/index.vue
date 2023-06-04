@@ -8,16 +8,16 @@
 
                 <Canvas class="center-body animated-div" :style="{ height: `calc(100% - ${remarkHeight + 40}px)`, transition: 'height 0.5s ease' }"/>
                 <transition name="expand">
-                    <div v-if="!isExpanded" class="center-bottom expanded" ref="expandedDiv">
-                        召唤 Copilot
-                        <up-outlined />
-                        <button @click="expand">^</button>
-                    </div>
-                    <div v-else class="center-bottom shrunk" ref="shrunkDiv">
-                        返回
-                        <up-circle-outlined />
-                        <button @click="shrink">-</button>
-                        <ChatBox height="480"/>
+                    <div>
+                        <div v-show="!isExpanded">
+                            召唤 Copilot
+                            <button @click="expand">^</button>
+                        </div>
+                        <div v-show="isExpanded">
+                            返回
+                            <button @click="shrink">v</button>
+                            <ChatBox height="480"/>
+                        </div>
                     </div>
                 </transition>
             </div>

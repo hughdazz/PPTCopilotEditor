@@ -4,7 +4,7 @@ WORKDIR /home/app
 
 COPY . .
 
-RUN npm config set registry https://registry.npmmirror.com/ && npm install
+RUN npm install
 
 EXPOSE 7777
 

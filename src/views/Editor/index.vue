@@ -60,8 +60,6 @@ import SelectPanel from './SelectPanel.vue'
 import {Modal} from 'ant-design-vue'
 import ChatBox from '@/components/ChatBox.vue'
 
-import { UpCircleOutlined } from '@ant-design/icons-vue'
-
 import {ElLoading, ElMessageBox} from 'element-plus'
 import {Slide} from '@/types/slides'
 import useGenPPTByOutline from '@/hooks/useGenPPTByOutline'

@@ -43,13 +43,10 @@ const gptinput = computed(() => currentSlide.value?.gptinput || '')
 const commitInput = () => {
   // 功能：向后端提交输入的命令
   // 说明：点击按钮出发，输入不为空才提交，提交后清空输入框
-  // if (gptinput.value === '') return
-  // history_ls.value.push(gptinput.value)// 记录历史命令
-
-    console.log(0)
+  if (gptinput.value === '') return
+  history_ls.value.push(gptinput.value)// 记录历史命令
   slidesStore.request_update_slides('请帮我把这个ppt修改为论语主题')
   slidesStore.request_update_slides(gptinput.value)
-    console.log(2)
   slidesStore.updateSlide({gptinput: ''})
 }
 

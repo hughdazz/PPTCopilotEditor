@@ -226,9 +226,12 @@ export const useSlidesStore = defineStore('slides', {
 
       update_slides(update_slides_requset).then((response) => {
         console.log('response:', JSON.stringify(response, null, 2))
-        const data = response.data
+        const data = JSON.parse(JSON.stringify(response, null, 2))['data'] as string
         if (data) {
-          receive_xml = data['xml_ppt']
+          receive_xml = data
+
+          console.log('接收到的页面：', receive_xml)
+
           // 将 receive_xml 中所有的 \ 和 \\ 替换为 空串
           receive_xml = receive_xml.replace(/\\/g, '')
 

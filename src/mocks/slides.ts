@@ -205,7 +205,7 @@ const readFile = (filePath: string) => {
 
 // 改这两个参数进行调试
 const choice_isdemo = false
-const template_json_path = './ppt_template/base_template.json'
+const template_json_path = './ppt_template/我真是太厉害了.json'
 
 export const slides: Slide[] = choice_isdemo ? slides_demo : JSON.parse(readFile(template_json_path))
 

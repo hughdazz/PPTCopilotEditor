@@ -1,10 +1,10 @@
 <template>
     <div class="chat-box">
         <div class="chat-box-history" ref="history">
-            <div v-for="item in chatHistory" :key="item.id">{{ item.content }}</div>
+            <div v-for="item in chatHistory" :key="item.id" class="chat-item">{{ item.content }}</div>
         </div>
         <div class="chat-box-input">
-            <el-input v-model="message" placeholder="请输入对话内容" clearable></el-input>
+            <el-input v-model="message" placeholder="请输入对话内容" @keyup.enter="submitMessage()" clearable></el-input>
             <el-button type="primary" @click="submitMessage">发送</el-button>
         </div>
     </div>
@@ -20,7 +20,6 @@ interface ChatHistoryItem {
   id: number;
   content: string;
 }
-
 
 export default defineComponent({
   name: 'ChatBox',
@@ -90,5 +89,11 @@ export default defineComponent({
     justify-content: flex-end;
     align-items: center;
     padding: 10px;
+}
+
+.chat-item {
+    color: blue;
+    font-size: 18px;
+    margin: 10px 0;
 }
 </style>

@@ -9,11 +9,13 @@
                 <Canvas class="center-body animated-div" :style="{ height: `calc(100% - ${remarkHeight + 40}px)`, transition: 'height 0.5s ease' }"/>
                 <transition name="expand">
                     <div v-if="!isExpanded" class="center-bottom expanded" ref="expandedDiv">
-                        点击扩大
+                        召唤 Copilot
+                        <up-outlined />
                         <button @click="expand">^</button>
                     </div>
                     <div v-else class="center-bottom shrunk" ref="shrunkDiv">
-                        点击缩小
+                        返回
+                        <up-circle-outlined />
                         <button @click="shrink">-</button>
                         <ChatBox height="480"/>
                     </div>
@@ -63,6 +65,11 @@ import {Slide} from '@/types/slides'
 import useGenPPTByOutline from '@/hooks/useGenPPTByOutline'
 import RequestHttp from '@/utils/axiosRequest'
 import { guide_slide } from '@/api/ppt_Request_gpt'
+const loadingInstance0 = ElLoading.service({
+  text: '正在启动PPT编辑系统...',
+  spinner: 'el-icon-loading',
+  background: 'rgba(0, 0, 0, 0.3)'
+})
 
 const mainStore = useMainStore()
 const {dialogForExport, showSelectPanel} = storeToRefs(mainStore)
@@ -91,7 +98,7 @@ usePasteEvent()
 import useImport from '@/hooks/useImport'
 import {encrypt} from '@/utils/crypto'
 const {importSpecificFile} = useImport()
-
+loadingInstance0.close()
 // 文件导入
 window.addEventListener('message', function(event) {
   // 检查消息来源

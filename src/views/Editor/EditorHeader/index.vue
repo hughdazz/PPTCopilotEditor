@@ -3,22 +3,6 @@
         <div class="left">
             <Dropdown :trigger="['click']">
                 <div class="menu-item">
-                    <IconFolderClose/>
-                    <span class="text">文件导入</span></div>
-                <template #overlay>
-                    <Menu>
-                        <FileInput accept=".pptist" @change="files => importSpecificFile(files)">
-                            <MenuItem>插入 pptist 文件</MenuItem>
-                        </FileInput>
-                        <FileInput accept="application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                                   @change="files => importPPTXFile(files)">
-                            <MenuItem>插入 pptx 文件（demo）</MenuItem>
-                        </FileInput>
-                    </Menu>
-                </template>
-            </Dropdown>
-            <Dropdown :trigger="['click']">
-                <div class="menu-item">
                     <IconEdit/>
                     <span class="text">编辑</span></div>
                 <template #overlay  >

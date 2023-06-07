@@ -27,8 +27,12 @@
         将修改内容保存到云端
       </div>
     </div>
+    <!--        橙色的字, 居中-->
+    <div v-show="showMessage" id="save2cloud" class="title" style="color: #ff9900; text-align: center;">
+      <span>保存成功！</span>
+    </div>
     <div class="btns">
-      <Button class="btn export" type="primary" @click="saveToCloud(selectedSlides)">保存到云端</Button>
+      <Button class="btn export" type="primary" @click="pushSaveBtnHandler()">保存到云端</Button>
       <Button class="btn close" @click="emit('close')">关闭</Button>
     </div>
   </div>
@@ -66,6 +70,19 @@ const selectedSlides = computed(() => {
     return index >= min - 1 && index <= max - 1
   })
 })
+
+const showMessage = ref(false)
+
+const pushSaveBtnHandler = () => {
+  saveToCloud(selectedSlides.value)
+  showMessage.value = true
+  // 暂停
+  setTimeout(() => {
+    showMessage.value = false
+    emit('close')
+  }, 1000)
+}
+
 </script>
 
 <style lang="scss" scoped>

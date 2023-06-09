@@ -94,7 +94,7 @@ import { encrypt } from '@/utils/crypto'
 const { importSpecificFile } = useImport()
 loadingInstance0.close()
 // 文件导入
-window.addEventListener('message', function (event) {
+window.addEventListener('message', function(event) {
   // 检查消息来源
   if (event.origin !== 'http://{{server_ip}}:9529') return
   const loadingInstance = ElLoading.service({

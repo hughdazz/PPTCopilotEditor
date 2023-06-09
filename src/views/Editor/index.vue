@@ -1,52 +1,46 @@
 <template>
-    <div class="pptist-editor">
-        <EditorHeader class="layout-header"/>
-        <div class="layout-content">
-            <Thumbnails class="layout-content-left"/>
-            <div class="layout-content-center">
-                <CanvasTool class="center-top"/>
+  <div class="pptist-editor">
+    <EditorHeader class="layout-header" />
+    <div class="layout-content">
+      <Thumbnails class="layout-content-left" />
+      <div class="layout-content-center">
+        <CanvasTool class="center-top" />
 
-                <Canvas class="center-body animated-div" :style="{ height: `calc(100% - ${remarkHeight + 40}px)`, transition: 'height 0.5s ease' }"/>
-                <transition name="expand">
-                    <div>
-                        <div v-show="!isExpanded">
-                            召唤 Copilot
-                            <button @click="expand">^</button>
-                        </div>
-                        <div v-show="isExpanded">
-                            返回
-                            <button @click="shrink">v</button>
-                            <ChatBox height="480"/>
-                        </div>
-                    </div>
-                </transition>
+        <Canvas class="center-body animated-div"
+          :style="{ height: `calc(100% - ${remarkHeight + 40}px)`, transition: 'height 0.5s ease' }" />
+        <transition name="expand">
+          <div>
+            <div v-show="!isExpanded">
+              召唤 Copilot
+              <button @click="expand">^</button>
             </div>
+            <div v-show="isExpanded">
+              返回
+              <button @click="shrink">v</button>
+              <ChatBox height="480" />
+            </div>
+          </div>
+        </transition>
+      </div>
 
-            <Toolbar class="layout-content-right"/>
-
-        </div>
+      <Toolbar class="layout-content-right" />
 
     </div>
 
-    <SelectPanel v-if="showSelectPanel"/>
+  </div>
 
-    <Modal
-            :visible="!!dialogForExport"
-            :footer="null"
-            centered
-            :closable="false"
-            :width="680"
-            destroyOnClose
-            @cancel="closeExportDialog()"
-    >
-        <ExportDialog/>
-    </Modal>
+  <SelectPanel v-if="showSelectPanel" />
+
+  <Modal :visible="!!dialogForExport" :footer="null" centered :closable="false" :width="680" destroyOnClose
+    @cancel="closeExportDialog()">
+    <ExportDialog />
+  </Modal>
 </template>
 
 <script lang="ts" setup>
-import {ref, watch, nextTick} from 'vue'
-import {storeToRefs} from 'pinia'
-import {useMainStore, useSlidesStore} from '@/store'
+import { ref, watch, nextTick } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useMainStore, useSlidesStore } from '@/store'
 import useGlobalHotkey from '@/hooks/useGlobalHotkey'
 import usePasteEvent from '@/hooks/usePasteEvent'
 
@@ -57,11 +51,11 @@ import Thumbnails from './Thumbnails/index.vue'
 import Toolbar from './Toolbar/index.vue'
 import ExportDialog from './ExportDialog/index.vue'
 import SelectPanel from './SelectPanel.vue'
-import {Modal} from 'ant-design-vue'
+import { Modal } from 'ant-design-vue'
 import ChatBox from '@/components/ChatBox.vue'
 
-import {ElLoading, ElMessageBox} from 'element-plus'
-import {Slide} from '@/types/slides'
+import { ElLoading, ElMessageBox } from 'element-plus'
+import { Slide } from '@/types/slides'
 import useGenPPTByOutline from '@/hooks/useGenPPTByOutline'
 import RequestHttp from '@/utils/axiosRequest'
 import { guide_slide } from '@/api/ppt_Request_gpt'
@@ -72,7 +66,7 @@ const loadingInstance0 = ElLoading.service({
 })
 
 const mainStore = useMainStore()
-const {dialogForExport, showSelectPanel} = storeToRefs(mainStore)
+const { dialogForExport, showSelectPanel } = storeToRefs(mainStore)
 const closeExportDialog = () => mainStore.setDialogForExport('')
 
 const slidesStore = useSlidesStore()
@@ -96,13 +90,13 @@ const shrink = async () => {
 useGlobalHotkey()
 usePasteEvent()
 import useImport from '@/hooks/useImport'
-import {encrypt} from '@/utils/crypto'
-const {importSpecificFile} = useImport()
+import { encrypt } from '@/utils/crypto'
+const { importSpecificFile } = useImport()
 loadingInstance0.close()
 // 文件导入
-window.addEventListener('message', function(event) {
+window.addEventListener('message', function (event) {
   // 检查消息来源
-  if (event.origin !== 'http://123.249.70.216:9529') return
+  if (event.origin !== 'http://{{server_ip}}:9529') return
   const loadingInstance = ElLoading.service({
     lock: true,
     text: '正在导入...',
@@ -129,7 +123,6 @@ window.addEventListener('message', function(event) {
 </script>
 
 <style lang="scss" scoped>
-
 .pptist-editor {
   height: 100%;
 }
@@ -162,6 +155,4 @@ window.addEventListener('message', function(event) {
   width: 260px;
   height: 100%;
 }
-
-
 </style>

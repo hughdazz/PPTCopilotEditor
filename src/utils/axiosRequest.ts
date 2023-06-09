@@ -13,7 +13,7 @@ interface ResultData<T> extends Result {
   data?: T;
 }
 
-const URL = 'http://123.249.70.216:8080'
+const URL = 'http://{{server_ip}}:8080'
 // const URL = 'http://localhost:8080'
 enum RequestEnums {
   TIMEOUT = 200000, // 超时时间，要设置的很大！！
